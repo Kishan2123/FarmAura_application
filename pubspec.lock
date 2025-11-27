@@ -81,6 +81,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+<<<<<<< HEAD
   file:
     dependency: transitive
     description:
@@ -97,6 +98,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+=======
+>>>>>>> 9d011e077f24875d0231af6f5ff886e1b4e6eeee
   flutter:
     dependency: "direct main"
     description: flutter
@@ -110,11 +113,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
+<<<<<<< HEAD
   flutter_localizations:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
+=======
+>>>>>>> 9d011e077f24875d0231af6f5ff886e1b4e6eeee
   flutter_svg:
     dependency: "direct main"
     description:
@@ -133,6 +139,7 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+<<<<<<< HEAD
   geocoding:
     dependency: "direct main"
     description:
@@ -213,6 +220,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.5"
+=======
+>>>>>>> 9d011e077f24875d0231af6f5ff886e1b4e6eeee
   go_router:
     dependency: "direct main"
     description:
@@ -245,6 +254,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+<<<<<<< HEAD
   intl:
     dependency: "direct main"
     description:
@@ -261,6 +271,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.7"
+=======
+>>>>>>> 9d011e077f24875d0231af6f5ff886e1b4e6eeee
   json_annotation:
     dependency: transitive
     description:
@@ -301,6 +313,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
+<<<<<<< HEAD
   location:
     dependency: "direct main"
     description:
@@ -325,6 +338,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.4"
+=======
+>>>>>>> 9d011e077f24875d0231af6f5ff886e1b4e6eeee
   logging:
     dependency: transitive
     description:
@@ -477,6 +492,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.5+1"
+<<<<<<< HEAD
   shared_preferences:
     dependency: "direct main"
     description:
@@ -533,6 +549,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
+=======
+>>>>>>> 9d011e077f24875d0231af6f5ff886e1b4e6eeee
   sky_engine:
     dependency: transitive
     description: flutter
@@ -618,6 +636,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+<<<<<<< HEAD
   url_launcher:
     dependency: "direct main"
     description:
@@ -690,6 +709,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.5.2"
+=======
+>>>>>>> 9d011e077f24875d0231af6f5ff886e1b4e6eeee
   vector_graphics:
     dependency: transitive
     description:
@@ -738,6 +759,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+<<<<<<< HEAD
   webview_flutter:
     dependency: "direct main"
     description:
@@ -770,6 +792,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.23.4"
+=======
+>>>>>>> 9d011e077f24875d0231af6f5ff886e1b4e6eeee
   xdg_directories:
     dependency: transitive
     description:

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
   # Farmaura Mobile App Design (Copy) (Copy) (Copy) (Copy) (Copy) (Copy)
 
@@ -12,6 +13,9 @@
   # FarmAura_application
 =======
 # farmaura
+=======
+# FarmAura
+>>>>>>> 9d011e077f24875d0231af6f5ff886e1b4e6eeee
 
 A new Flutter project.
 
@@ -27,4 +31,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+<<<<<<< HEAD
 >>>>>>> 2ee407e (final push of FarmAura_application source code)
+=======
+>>>>>>> 9d011e077f24875d0231af6f5ff886e1b4e6eeee
