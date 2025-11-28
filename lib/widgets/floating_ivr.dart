@@ -3,7 +3,9 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../theme/app_theme.dart';
 
 class FloatingIVR extends StatefulWidget {
-  const FloatingIVR({super.key});
+  const FloatingIVR({super.key, this.contextText});
+
+  final String? contextText;
 
   @override
   State<FloatingIVR> createState() => _FloatingIVRState();
@@ -19,11 +21,16 @@ class _FloatingIVRState extends State<FloatingIVR> {
     if (isListening) return;
     setState(() => isListening = true);
     await Future.delayed(const Duration(seconds: 2));
-    const userQuery = 'How do I control pests on my wheat crop?';
+    
+    final userQuery = widget.contextText != null 
+        ? 'Read the fertilizer suggestion.' 
+        : 'How do I control pests on my wheat crop?';
+        
     messages.add(_Msg(userQuery, true));
     setState(() => isListening = false);
 
-    const response = 'For wheat pest control, I recommend:\n\n1. Use neem-based organic pesticides\n2. Spray early morning or evening\n3. Monitor for aphids and termites\n4. Apply fungicides if rust appears\n5. Maintain proper field drainage\n\nWould you like specific product recommendations?';
+    final response = widget.contextText ?? 'For wheat pest control, I recommend:\n\n1. Use neem-based organic pesticides\n2. Spray early morning or evening\n3. Monitor for aphids and termites\n4. Apply fungicides if rust appears\n5. Maintain proper field drainage\n\nWould you like specific product recommendations?';
+    
     for (var i = 1; i <= response.length; i++) {
       await Future.delayed(const Duration(milliseconds: 25));
       setState(() => typing = response.substring(0, i));

@@ -482,27 +482,45 @@ class RecommendationsScreen extends StatelessWidget {
                     
                     const SizedBox(height: 16),
                     
-                    // Fertilizer recommendation
-                    if (rec.fertilizerRecommendation.isNotEmpty) ...[
-                      const Text(
-                        'Fertilizer',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                    // Fertilizer Suggestion Card
+                    if (rec.fertilizerRecommendation.isNotEmpty || rec.fertilizerNote.isNotEmpty) ...[
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF1F8E9),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: const Color(0xFFC8E6C9)),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.science, size: 16, color: Colors.green),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'Fertilizer Suggestion',
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              rec.fertilizerNote.isNotEmpty ? rec.fertilizerNote : rec.fertilizerRecommendation,
+                              style: TextStyle(
+                                color: Colors.green[900],
+                                fontSize: 12,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(rec.fertilizerRecommendation),
-                      if (rec.fertilizerNote.isNotEmpty) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          rec.fertilizerNote,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
                     ],
                     
                     const SizedBox(height: 16),

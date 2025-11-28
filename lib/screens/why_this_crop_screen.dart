@@ -159,7 +159,7 @@ class WhyThisCropScreen extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(AppLocalizations.of(context)!.proTip, style: const TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.w700)),
+                                    Text(AppLocalizations.of(context)!.fertilizerSuggestion, style: const TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.w700)),
                                     const SizedBox(height: 4),
                                     Text(
                                       fertilizerNote,

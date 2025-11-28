@@ -56,6 +56,8 @@ class _CombinedInputScreenState extends State<CombinedInputScreen> {
     'texture': '',
     'lastCrop': '',
     'previousCrop': '',
+    'shcNumber': '',
+    'testDate': '',
   };
 
   List<FertilizerEntry> fertilizers = [FertilizerEntry(id: '1')];
@@ -312,6 +314,7 @@ class _CombinedInputScreenState extends State<CombinedInputScreen> {
                                   padding: const EdgeInsets.only(top: 8),
                                   child: TextField(
                                     decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterLandSize),
+                                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                     onChanged: (v) => setState(() => customInputs['landSize'] = v),
                                   ),
                                 ),
@@ -528,9 +531,19 @@ class _CombinedInputScreenState extends State<CombinedInputScreen> {
                                         ),
                                       ),
                                       const SizedBox(height: 12),
-                                      _MiniInput(label: AppLocalizations.of(context)!.shcNumber, hint: AppLocalizations.of(context)!.enterShcNumberInput),
+                                      _MiniInput(
+                                        label: AppLocalizations.of(context)!.shcNumber, 
+                                        hint: AppLocalizations.of(context)!.enterShcNumberInput,
+                                        onChanged: (v) => setState(() => customInputs['shcNumber'] = v),
+                                        keyboardType: TextInputType.text,
+                                      ),
                                       const SizedBox(height: 8),
-                                      _MiniInput(label: AppLocalizations.of(context)!.testDate, hint: 'YYYY-MM-DD'),
+                                      _MiniInput(
+                                        label: AppLocalizations.of(context)!.testDate, 
+                                        hint: 'YYYY-MM-DD',
+                                        onChanged: (v) => setState(() => customInputs['testDate'] = v),
+                                        keyboardType: TextInputType.datetime,
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -727,17 +740,26 @@ class _CombinedInputScreenState extends State<CombinedInputScreen> {
 }
 
 class _MiniInput extends StatelessWidget {
-  const _MiniInput({required this.label, required this.hint, this.controller});
+  const _MiniInput({
+    required this.label, 
+    required this.hint, 
+    this.controller, 
+    this.onChanged,
+    this.keyboardType = TextInputType.text,
+  });
   final String label;
   final String hint;
   final TextEditingController? controller;
+  final ValueChanged<String>? onChanged;
+  final TextInputType keyboardType;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      onChanged: onChanged,
       decoration: InputDecoration(labelText: label, hintText: hint),
-      keyboardType: TextInputType.number,
+      keyboardType: keyboardType,
     );
   }
 }
