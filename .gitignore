@@ -54,3 +54,11 @@ backend/.Python
 backend/env/
 backend/*.log
 backend/test_response_*.json
+
+# Environment Variables
+.env
+*.env
+backend/.env
+
+# Large Datasets
+models/panIndia_JharkhandRich_crop_recommendation_300k.csv
