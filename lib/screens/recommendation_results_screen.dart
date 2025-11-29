@@ -115,7 +115,11 @@ class _RecommendationResultsScreenState extends State<RecommendationResultsScree
               ],
             ),
             const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
-            const FloatingIVR(),
+            FloatingIVR(
+              contextText: widget.recommendations.isNotEmpty
+                  ? widget.recommendations.take(3).map((r) => "For ${r['crop']}: ${r['fertilizer_note']}").join("\n\n")
+                  : null,
+            ),
           ],
         ),
       ),
@@ -251,6 +255,44 @@ class _RecommendationCard extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 16),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F8E9),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFC8E6C9)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.science, size: 16, color: AppColors.primary),
+                    const SizedBox(width: 8),
+                    Text(
+                      AppLocalizations.of(context)!.fertilizerSuggestion,
+                      style: const TextStyle(
+                        color: AppColors.primaryDark,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  rec['fertilizer_note'] ?? 'Follow standard fertilizer application.',
+                  style: const TextStyle(
+                    color: AppColors.primaryDark,
+                    fontSize: 12,
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
           Row(

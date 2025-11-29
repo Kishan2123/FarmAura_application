@@ -1490,6 +1490,12 @@ abstract class AppLocalizations {
   /// **'Pro Tip'**
   String get proTip;
 
+  /// No description provided for @fertilizerSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Fertilizer Suggestion'**
+  String get fertilizerSuggestion;
+
   /// No description provided for @backToResults.
   ///
   /// In en, this message translates to:

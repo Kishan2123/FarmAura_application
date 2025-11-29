@@ -726,6 +726,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get proTip => 'प्रो टिप';
 
   @override
+  String get fertilizerSuggestion => 'Fertilizer Suggestion';
+
+  @override
   String get backToResults => 'परिणामों पर वापस जाएं';
 
   @override

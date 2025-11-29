@@ -724,6 +724,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get proTip => 'Pro Tip';
 
   @override
+  String get fertilizerSuggestion => 'Fertilizer Suggestion';
+
+  @override
   String get backToResults => 'Back to Results';
 
   @override
