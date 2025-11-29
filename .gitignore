@@ -57,10 +57,11 @@ backend/test_response_*.json
 
 # Environment Variables
 .env
+.env.*
+**/.env
+**/.env.*
 *.env
-backend/.env
 *.env.example
-backend/.env.example
 
 # Large Datasets
 models/panIndia_JharkhandRich_crop_recommendation_300k.csv
