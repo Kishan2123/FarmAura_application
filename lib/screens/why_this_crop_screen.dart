@@ -69,25 +69,25 @@ class WhyThisCropScreen extends StatelessWidget {
                         const SizedBox(height: 16),
                         _FactorCard(
                           title: AppLocalizations.of(context)!.excellentSoilMatch,
-                          description: 'Your loamy soil with pH 6.5 is perfect for cotton cultivation. The NPK ratio matches cotton requirements.',
+                          description: AppLocalizations.of(context)!.excellentSoilMatchDesc,
                           icon: LucideIcons.sprout,
                           color: Colors.green,
                         ),
                         _FactorCard(
                           title: AppLocalizations.of(context)!.weatherSuitability,
-                          description: 'Current temperature (28-32°C) and upcoming rainfall pattern are ideal for cotton sowing season.',
+                          description: AppLocalizations.of(context)!.weatherSuitabilityDesc,
                           icon: Icons.wb_sunny_outlined,
                           color: Colors.orange,
                         ),
                         _FactorCard(
                           title: AppLocalizations.of(context)!.rotationBenefit,
-                          description: 'Cotton after wheat provides excellent crop rotation benefits, reducing pest pressure and improving soil health.',
+                          description: AppLocalizations.of(context)!.rotationBenefitDesc,
                           icon: Icons.sync,
                           color: Colors.blue,
                         ),
                         _FactorCard(
                           title: AppLocalizations.of(context)!.marketAdvantage,
-                          description: 'Current cotton prices are ₹7,200/quintal with 12% upward trend. MSP support available at ₹6,620/quintal.',
+                          description: AppLocalizations.of(context)!.marketAdvantageDesc,
                           icon: Icons.attach_money,
                           color: Colors.amber,
                         ),
@@ -130,9 +130,9 @@ class WhyThisCropScreen extends StatelessWidget {
                                   children: [
                                     Text(AppLocalizations.of(context)!.proTip, style: const TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.w700)),
                                     const SizedBox(height: 4),
-                                    const Text(
-                                      'Ensure proper spacing of 2-3 feet between plants and maintain adequate irrigation during flowering stage for maximum yield.',
-                                      style: TextStyle(color: AppColors.primaryDark, fontSize: 13, height: 1.4),
+                                    Text(
+                                      AppLocalizations.of(context)!.proTipContent,
+                                      style: const TextStyle(color: AppColors.primaryDark, fontSize: 13, height: 1.4),
                                     ),
                                   ],
                                 ),

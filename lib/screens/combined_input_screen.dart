@@ -108,6 +108,7 @@ class _CombinedInputScreenState extends State<CombinedInputScreen> {
       default: return value;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,295 +117,297 @@ class _CombinedInputScreenState extends State<CombinedInputScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            Column(
-              children: [
-                AppHeader(title: AppLocalizations.of(context)!.cropInput, showBack: true, showProfile: false, appState: widget.appState),
-                Expanded(
-                  child: SingleChildScrollView(
-                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(AppLocalizations.of(context)!.cropAdvisoryForm, style: Theme.of(context).textTheme.headlineSmall),
-                        const SizedBox(height: 4),
-                        Text(AppLocalizations.of(context)!.fillDetails, style: const TextStyle(color: AppColors.muted)),
-                        const SizedBox(height: 12),
-                        _sectionCard(
-                          title: AppLocalizations.of(context)!.sectionFarmDetails,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(AppLocalizations.of(context)!.landSize, style: const TextStyle(color: AppColors.muted)),
-                              const SizedBox(height: 6),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: landSizes
-                                    .map((size) => ChoiceChip(
-                                          label: Text(_getLocalizedValue(context, size)),
-                                          selected: landSize == size,
-                                          onSelected: (_) => setState(() => landSize = size),
-                                          selectedColor: AppColors.primary,
-                                          labelStyle: TextStyle(color: landSize == size ? Colors.white : AppColors.primaryDark),
-                                        ))
-                                    .toList(),
-                              ),
-                              if (landSize == 'Other (Manual)')
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: TextField(
-                                    decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterLandSize),
-                                    onChanged: (v) => setState(() => customInputs['landSize'] = v),
-                                  ),
-                                ),
-                              const SizedBox(height: 12),
-                              Text(AppLocalizations.of(context)!.irrigationType, style: const TextStyle(color: AppColors.muted)),
-                              const SizedBox(height: 6),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: irrigationTypes
-                                    .map((type) => ChoiceChip(
-                                          label: Text(_getLocalizedValue(context, type)),
-                                          selected: irrigation == type,
-                                          onSelected: (_) => setState(() => irrigation = type),
-                                          selectedColor: AppColors.primary,
-                                          labelStyle: TextStyle(color: irrigation == type ? Colors.white : AppColors.primaryDark),
-                                        ))
-                                    .toList(),
-                              ),
-                              if (irrigation == 'Other (Manual)')
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: TextField(
-                                    decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterIrrigationType),
-                                    onChanged: (v) => setState(() => customInputs['irrigation'] = v),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        _sectionCard(
-                          title: AppLocalizations.of(context)!.sectionSoilInfo,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(color: const Color(0xFFE8F5E9), borderRadius: BorderRadius.circular(16)),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(AppLocalizations.of(context)!.chooseInputMethod, style: const TextStyle(color: AppColors.primaryDark, fontSize: 13)),
-                                    const SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        _modeButton('auto', AppLocalizations.of(context)!.autoDetect, LucideIcons.navigation),
-                                        const SizedBox(width: 8),
-                                        _modeButton('manual', AppLocalizations.of(context)!.manual, LucideIcons.edit),
-                                        const SizedBox(width: 8),
-                                        _modeButton('shc', AppLocalizations.of(context)!.shc, LucideIcons.upload),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              if (soilInputMode == 'auto')
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.blue.shade200)),
-                                  child: Text('Location: ${widget.appState.location['district']}, ${widget.appState.location['state']}',
-                                      style: const TextStyle(color: AppColors.primaryDark)),
-                                ),
-                              if (soilInputMode == 'manual') ...[
-                                DropdownButtonFormField<String>(
-                                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.soilType),
-                                  initialValue: soilType.isEmpty ? null : soilType,
-                                  items: soilTypes.map((t) => DropdownMenuItem(value: t, child: Text(_getLocalizedValue(context, t)))).toList(),
-                                  onChanged: (v) => setState(() => soilType = v ?? ''),
-                                ),
-                                if (soilType == 'Other (Manual)')
-                                  TextField(
-                                    decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterSoilType),
-                                    onChanged: (v) => setState(() => customInputs['soilType'] = v),
-                                  ),
-                                const SizedBox(height: 12),
-                                Text(AppLocalizations.of(context)!.soilTexture, style: const TextStyle(color: AppColors.muted)),
+            Positioned.fill(
+              child: Column(
+                children: [
+                  AppHeader(title: AppLocalizations.of(context)!.cropInput, showBack: true, showProfile: false, appState: widget.appState),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(AppLocalizations.of(context)!.cropAdvisoryForm, style: Theme.of(context).textTheme.headlineSmall),
+                          const SizedBox(height: 4),
+                          Text(AppLocalizations.of(context)!.fillDetails, style: const TextStyle(color: AppColors.muted)),
+                          const SizedBox(height: 12),
+                          _sectionCard(
+                            title: AppLocalizations.of(context)!.sectionFarmDetails,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(AppLocalizations.of(context)!.landSize, style: const TextStyle(color: AppColors.muted)),
                                 const SizedBox(height: 6),
                                 Wrap(
                                   spacing: 8,
                                   runSpacing: 8,
-                                  children: soilTextures
-                                      .map((t) => ChoiceChip(
-                                            label: Text(_getLocalizedValue(context, t)),
-                                            selected: texture == t,
-                                            onSelected: (_) => setState(() => texture = t),
+                                  children: landSizes
+                                      .map((size) => ChoiceChip(
+                                            label: Text(_getLocalizedValue(context, size)),
+                                            selected: landSize == size,
+                                            onSelected: (_) => setState(() => landSize = size),
                                             selectedColor: AppColors.primary,
-                                            labelStyle: TextStyle(color: texture == t ? Colors.white : AppColors.primaryDark),
+                                            labelStyle: TextStyle(color: landSize == size ? Colors.white : AppColors.primaryDark),
                                           ))
                                       .toList(),
                                 ),
-                                if (texture == 'Other (Manual)')
+                                if (landSize == 'Other (Manual)')
                                   Padding(
                                     padding: const EdgeInsets.only(top: 8),
                                     child: TextField(
-                                      decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterSoilTexture),
-                                      onChanged: (v) => setState(() => customInputs['texture'] = v),
+                                      decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterLandSize),
+                                      onChanged: (v) => setState(() => customInputs['landSize'] = v),
                                     ),
                                   ),
                                 const SizedBox(height: 12),
-                                Text('pH Level: ${ph.toStringAsFixed(1)}', style: const TextStyle(color: AppColors.muted)),
-                                Slider(
-                                  value: ph,
-                                  min: 4,
-                                  max: 10,
-                                  divisions: 60,
-                                  activeColor: AppColors.primary,
-                                  onChanged: (v) => setState(() => ph = v),
+                                Text(AppLocalizations.of(context)!.irrigationType, style: const TextStyle(color: AppColors.muted)),
+                                const SizedBox(height: 6),
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: irrigationTypes
+                                      .map((type) => ChoiceChip(
+                                            label: Text(_getLocalizedValue(context, type)),
+                                            selected: irrigation == type,
+                                            onSelected: (_) => setState(() => irrigation = type),
+                                            selectedColor: AppColors.primary,
+                                            labelStyle: TextStyle(color: irrigation == type ? Colors.white : AppColors.primaryDark),
+                                          ))
+                                      .toList(),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(AppLocalizations.of(context)!.acidic, style: const TextStyle(color: AppColors.muted, fontSize: 12)),
-                                    Text(AppLocalizations.of(context)!.neutral, style: const TextStyle(color: AppColors.muted, fontSize: 12)),
-                                    Text(AppLocalizations.of(context)!.alkaline, style: const TextStyle(color: AppColors.muted, fontSize: 12)),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-                                Row(
-                                  children: const [
-                                    Expanded(child: _MiniInput(label: 'Nitrogen (N)', hint: '0-100')),
-                                    SizedBox(width: 8),
-                                    Expanded(child: _MiniInput(label: 'Phosphorus (P)', hint: '0-100')),
-                                    SizedBox(width: 8),
-                                    Expanded(child: _MiniInput(label: 'Potassium (K)', hint: '0-100')),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-                                _MiniInput(label: AppLocalizations.of(context)!.soilMoisture, hint: AppLocalizations.of(context)!.enterMoisture),
+                                if (irrigation == 'Other (Manual)')
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: TextField(
+                                      decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterIrrigationType),
+                                      onChanged: (v) => setState(() => customInputs['irrigation'] = v),
+                                    ),
+                                  ),
                               ],
-                              if (soilInputMode == 'shc')
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          _sectionCard(
+                            title: AppLocalizations.of(context)!.sectionSoilInfo,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
                                 Container(
                                   padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(color: AppColors.primary, width: 2),
-                                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 8))],
-                                  ),
+                                  decoration: BoxDecoration(color: const Color(0xFFE8F5E9), borderRadius: BorderRadius.circular(16)),
                                   child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Container(
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.symmetric(vertical: 16),
-                                        decoration: BoxDecoration(
-                                          gradient: const LinearGradient(colors: [AppColors.primary, AppColors.primaryDark]),
-                                          borderRadius: BorderRadius.circular(18),
-                                          border: Border.all(color: AppColors.accent, width: 3),
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            const Text('SHC', style: TextStyle(fontSize: 24, color: Colors.white)),
-                                            const SizedBox(height: 6),
-                                            Text(AppLocalizations.of(context)!.uploadShc, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
-                                            const SizedBox(height: 2),
-                                            Text(AppLocalizations.of(context)!.recommendedForAccuracy, style: const TextStyle(color: Colors.white70, fontSize: 12)),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 12),
-                                      _MiniInput(label: AppLocalizations.of(context)!.shcNumber, hint: AppLocalizations.of(context)!.enterShcNumberInput),
+                                      Text(AppLocalizations.of(context)!.chooseInputMethod, style: const TextStyle(color: AppColors.primaryDark, fontSize: 13)),
                                       const SizedBox(height: 8),
-                                      _MiniInput(label: AppLocalizations.of(context)!.testDate, hint: 'YYYY-MM-DD'),
+                                      Row(
+                                        children: [
+                                          _modeButton('auto', AppLocalizations.of(context)!.autoDetect, LucideIcons.navigation),
+                                          const SizedBox(width: 8),
+                                          _modeButton('manual', AppLocalizations.of(context)!.manual, LucideIcons.edit),
+                                          const SizedBox(width: 8),
+                                          _modeButton('shc', AppLocalizations.of(context)!.shc, LucideIcons.upload),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        _sectionCard(
-                          title: AppLocalizations.of(context)!.sectionCropRotation,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              DropdownButtonFormField<String>(
-                                decoration: InputDecoration(labelText: AppLocalizations.of(context)!.lastCropGrown),
-                                initialValue: lastCrop.isEmpty ? null : lastCrop,
-                                items: crops.map((c) => DropdownMenuItem(value: c, child: Text(_getLocalizedValue(context, c)))).toList(),
-                                onChanged: (v) => setState(() => lastCrop = v ?? ''),
-                              ),
-                              if (lastCrop == 'Other (Manual)')
-                                TextField(
-                                  decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterLastCrop),
-                                  onChanged: (v) => setState(() => customInputs['lastCrop'] = v),
-                                ),
-                              const SizedBox(height: 12),
-                              DropdownButtonFormField<String>(
-                                decoration: InputDecoration(labelText: AppLocalizations.of(context)!.frequentCrop),
-                                initialValue: frequentCrop.isEmpty ? null : frequentCrop,
-                                items: crops.map((c) => DropdownMenuItem(value: c, child: Text(_getLocalizedValue(context, c)))).toList(),
-                                onChanged: (v) => setState(() => frequentCrop = v ?? ''),
-                              ),
-                              if (frequentCrop == 'Other (Manual)')
-                                TextField(
-                                  decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterFrequentCrop),
-                                  onChanged: (v) => setState(() => customInputs['previousCrop'] = v),
-                                ),
-                              const SizedBox(height: 12),
-                              ...fertilizers.map((f) => _fertilizerCard(f)).toList(),
-                              const SizedBox(height: 12),
-                              ElevatedButton.icon(
-                                onPressed: () => setState(() => fertilizers.add(FertilizerEntry(id: (fertilizers.length + 1).toString()))),
-                                icon: const Icon(LucideIcons.plus),
-                                label: Text(AppLocalizations.of(context)!.addFertilizer),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.primary,
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                  padding: const EdgeInsets.symmetric(vertical: 14),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          height: 56,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: isValid
-                                ? () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (_) => RecommendationResultsScreen(appState: widget.appState)),
-                                    );
-                                  }
-                                : null,
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                              backgroundColor: AppColors.primary,
-                              foregroundColor: Colors.white,
-                              disabledBackgroundColor: Colors.grey.shade300,
+                                const SizedBox(height: 12),
+                                if (soilInputMode == 'auto')
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.blue.shade200)),
+                                    child: Text('Location: ${widget.appState.location['district']}, ${widget.appState.location['state']}',
+                                        style: const TextStyle(color: AppColors.primaryDark)),
+                                  ),
+                                if (soilInputMode == 'manual') ...[
+                                  DropdownButtonFormField<String>(
+                                    decoration: InputDecoration(labelText: AppLocalizations.of(context)!.soilType),
+                                    initialValue: soilType.isEmpty ? null : soilType,
+                                    items: soilTypes.map((t) => DropdownMenuItem(value: t, child: Text(_getLocalizedValue(context, t)))).toList(),
+                                    onChanged: (v) => setState(() => soilType = v ?? ''),
+                                  ),
+                                  if (soilType == 'Other (Manual)')
+                                    TextField(
+                                      decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterSoilType),
+                                      onChanged: (v) => setState(() => customInputs['soilType'] = v),
+                                    ),
+                                  const SizedBox(height: 12),
+                                  Text(AppLocalizations.of(context)!.soilTexture, style: const TextStyle(color: AppColors.muted)),
+                                  const SizedBox(height: 6),
+                                  Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: soilTextures
+                                        .map((t) => ChoiceChip(
+                                              label: Text(_getLocalizedValue(context, t)),
+                                              selected: texture == t,
+                                              onSelected: (_) => setState(() => texture = t),
+                                              selectedColor: AppColors.primary,
+                                              labelStyle: TextStyle(color: texture == t ? Colors.white : AppColors.primaryDark),
+                                            ))
+                                        .toList(),
+                                  ),
+                                  if (texture == 'Other (Manual)')
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8),
+                                      child: TextField(
+                                        decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterSoilTexture),
+                                        onChanged: (v) => setState(() => customInputs['texture'] = v),
+                                      ),
+                                    ),
+                                  const SizedBox(height: 12),
+                                  Text('pH Level: ${ph.toStringAsFixed(1)}', style: const TextStyle(color: AppColors.muted)),
+                                  Slider(
+                                    value: ph,
+                                    min: 4,
+                                    max: 10,
+                                    divisions: 60,
+                                    activeColor: AppColors.primary,
+                                    onChanged: (v) => setState(() => ph = v),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(AppLocalizations.of(context)!.acidic, style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+                                      Text(AppLocalizations.of(context)!.neutral, style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+                                      Text(AppLocalizations.of(context)!.alkaline, style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Row(
+                                    children: const [
+                                      Expanded(child: _MiniInput(label: 'Nitrogen (N)', hint: '0-100')),
+                                      SizedBox(width: 8),
+                                      Expanded(child: _MiniInput(label: 'Phosphorus (P)', hint: '0-100')),
+                                      SizedBox(width: 8),
+                                      Expanded(child: _MiniInput(label: 'Potassium (K)', hint: '0-100')),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+                                  _MiniInput(label: AppLocalizations.of(context)!.soilMoisture, hint: AppLocalizations.of(context)!.enterMoisture),
+                                ],
+                                if (soilInputMode == 'shc')
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(color: AppColors.primary, width: 2),
+                                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 8))],
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: double.infinity,
+                                          padding: const EdgeInsets.symmetric(vertical: 16),
+                                          decoration: BoxDecoration(
+                                            gradient: const LinearGradient(colors: [AppColors.primary, AppColors.primaryDark]),
+                                            borderRadius: BorderRadius.circular(18),
+                                            border: Border.all(color: AppColors.accent, width: 3),
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              const Text('SHC', style: TextStyle(fontSize: 24, color: Colors.white)),
+                                              const SizedBox(height: 6),
+                                              Text(AppLocalizations.of(context)!.uploadShc, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                                              const SizedBox(height: 2),
+                                              Text(AppLocalizations.of(context)!.recommendedForAccuracy, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        _MiniInput(label: AppLocalizations.of(context)!.shcNumber, hint: AppLocalizations.of(context)!.enterShcNumberInput),
+                                        const SizedBox(height: 8),
+                                        _MiniInput(label: AppLocalizations.of(context)!.testDate, hint: 'YYYY-MM-DD'),
+                                      ],
+                                    ),
+                                  ),
+                              ],
                             ),
-                            child: Text(AppLocalizations.of(context)!.getRecommendation),
                           ),
-                        ),
-                        if (!isValid)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: Text(AppLocalizations.of(context)!.fillAllFields, style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+                          const SizedBox(height: 12),
+                          _sectionCard(
+                            title: AppLocalizations.of(context)!.sectionCropRotation,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                DropdownButtonFormField<String>(
+                                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.lastCropGrown),
+                                  initialValue: lastCrop.isEmpty ? null : lastCrop,
+                                  items: crops.map((c) => DropdownMenuItem(value: c, child: Text(_getLocalizedValue(context, c)))).toList(),
+                                  onChanged: (v) => setState(() => lastCrop = v ?? ''),
+                                ),
+                                if (lastCrop == 'Other (Manual)')
+                                  TextField(
+                                    decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterLastCrop),
+                                    onChanged: (v) => setState(() => customInputs['lastCrop'] = v),
+                                  ),
+                                const SizedBox(height: 12),
+                                DropdownButtonFormField<String>(
+                                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.frequentCrop),
+                                  initialValue: frequentCrop.isEmpty ? null : frequentCrop,
+                                  items: crops.map((c) => DropdownMenuItem(value: c, child: Text(_getLocalizedValue(context, c)))).toList(),
+                                  onChanged: (v) => setState(() => frequentCrop = v ?? ''),
+                                ),
+                                if (frequentCrop == 'Other (Manual)')
+                                  TextField(
+                                    decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterFrequentCrop),
+                                    onChanged: (v) => setState(() => customInputs['previousCrop'] = v),
+                                  ),
+                                const SizedBox(height: 12),
+                                ...fertilizers.map((f) => _fertilizerCard(f)).toList(),
+                                const SizedBox(height: 12),
+                                ElevatedButton.icon(
+                                  onPressed: () => setState(() => fertilizers.add(FertilizerEntry(id: (fertilizers.length + 1).toString()))),
+                                  icon: const Icon(LucideIcons.plus),
+                                  label: Text(AppLocalizations.of(context)!.addFertilizer),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primary,
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                      ],
+                          const SizedBox(height: 16),
+                          SizedBox(
+                            height: 56,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: isValid
+                                  ? () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (_) => RecommendationResultsScreen(appState: widget.appState)),
+                                      );
+                                    }
+                                  : null,
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                                backgroundColor: AppColors.primary,
+                                foregroundColor: Colors.white,
+                                disabledBackgroundColor: Colors.grey.shade300,
+                              ),
+                              child: Text(AppLocalizations.of(context)!.getRecommendation),
+                            ),
+                          ),
+                          if (!isValid)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Text(AppLocalizations.of(context)!.fillAllFields, style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const FloatingIVR(),
           ],
@@ -422,16 +425,16 @@ class _CombinedInputScreenState extends State<CombinedInputScreen> {
           if (mode == 'auto') {
             try {
               await widget.appState.updateLocationFromService();
-              if (mounted) setState(() {}); // Refresh to show new location
+              if (!mounted) return;
+              setState(() {}); // Refresh to show new location
             } catch (e) {
-              if (mounted) {
-                if (e.toString().contains('Location services are disabled')) {
-                  LocationHelper.showLocationServiceDialog(context, () {
-                    // Retry logic
-                  });
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
-                }
+              if (!mounted) return;
+              if (e.toString().contains('Location services are disabled')) {
+                LocationHelper.showLocationServiceDialog(context, () {
+                  // Retry logic
+                });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
               }
             }
           }

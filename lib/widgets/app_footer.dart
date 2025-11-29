@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../theme/app_theme.dart';
 
+import 'package:farmaura/l10n/app_localizations.dart';
+
 class AppFooter extends StatelessWidget {
   const AppFooter({super.key});
 
@@ -10,11 +12,11 @@ class AppFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     final location = GoRouter.of(context).routeInformationProvider.value.uri.toString();
     final navItems = [
-      _NavItem(path: '/pest', label: 'Pest', icon: LucideIcons.bug),
-      _NavItem(path: '/crop-rec', label: 'Crop', icon: LucideIcons.sprout),
-      _NavItem(path: '/dashboard', label: 'Home', icon: LucideIcons.home),
-      _NavItem(path: '/profile', label: 'Profile', icon: LucideIcons.user),
-      _NavItem(path: '/videos', label: 'Videos', icon: LucideIcons.video),
+      _NavItem(path: '/pest', label: AppLocalizations.of(context)!.pestLabel, icon: LucideIcons.bug),
+      _NavItem(path: '/crop-rec', label: AppLocalizations.of(context)!.cropLabel, icon: LucideIcons.sprout),
+      _NavItem(path: '/dashboard', label: AppLocalizations.of(context)!.home, icon: LucideIcons.home),
+      _NavItem(path: '/profile', label: AppLocalizations.of(context)!.profile, icon: LucideIcons.user),
+      _NavItem(path: '/videos', label: AppLocalizations.of(context)!.videos, icon: LucideIcons.video),
     ];
 
     return Container(

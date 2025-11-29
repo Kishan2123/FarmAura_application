@@ -12,7 +12,6 @@ class PestResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -67,48 +66,25 @@ class PestResultScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        Text(AppLocalizations.of(context)!.recommendedActions, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                        Text(AppLocalizations.of(context)!.recommendedActions, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
                         const SizedBox(height: 16),
                         _ActionCard(
                           title: AppLocalizations.of(context)!.chemicalControl,
-                          description: 'Spray Mancozeb 75 WP @ 2g/liter of water. Repeat after 10-12 days if necessary.',
+                          description: 'Spray Mancozeb 75 WP @ 2.5g/liter of water.',
                           icon: LucideIcons.flaskConical,
-                          color: Colors.orange,
+                          color: Colors.blue,
                         ),
                         _ActionCard(
                           title: AppLocalizations.of(context)!.biologicalControl,
-                          description: 'Use Trichoderma viride @ 5g/liter for seed treatment before sowing.',
+                          description: 'Use Pseudomonas fluorescens @ 10g/liter.',
                           icon: LucideIcons.leaf,
                           color: Colors.green,
                         ),
-                        const SizedBox(height: 24),
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF1F8E9),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: const Color(0xFFC8E6C9)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Icon(Icons.lightbulb_outline, color: Colors.green, size: 24),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(AppLocalizations.of(context)!.organicAlternativeTitle, style: const TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.w700)),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      AppLocalizations.of(context)!.organicAlternativeDesc,
-                                      style: const TextStyle(color: AppColors.primaryDark, fontSize: 13, height: 1.4),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                        _ActionCard(
+                          title: AppLocalizations.of(context)!.organicAlternativeTitle,
+                          description: AppLocalizations.of(context)!.organicAlternativeDesc,
+                          icon: LucideIcons.sprout,
+                          color: Colors.orange,
                         ),
                         const SizedBox(height: 24),
                         Row(
@@ -145,7 +121,6 @@ class PestResultScreen extends StatelessWidget {
                 ),
               ],
             ),
-
             const FloatingIVR(),
           ],
         ),

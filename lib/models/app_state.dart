@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/location_service.dart';
 import 'package:geolocator/geolocator.dart';
+import '../models/market_price.dart';
+import '../services/market_api_service.dart';
 
 class AppState extends ChangeNotifier {
   String userLanguage = 'English';
@@ -148,6 +150,48 @@ class AppState extends ChangeNotifier {
       rethrow;
     }
   }
+
+
+  // Market Price Integration
+  List<MarketPrice> marketPrices = [];
+  bool isLoadingPrices = false;
+  String? priceError;
+
+  Future<void> fetchMarketPrices({String? commodityFilter}) async {
+    try {
+      isLoadingPrices = true;
+      priceError = null;
+      notifyListeners();
+
+      final state = location['state']?.toString();
+      final district = location['district']?.toString();
+
+      if (state == null) {
+        priceError = 'Location not detected';
+        isLoadingPrices = false;
+        notifyListeners();
+        return;
+      }
+
+      final prices = await MarketApiService().fetchMarketPrices(
+        state: state,
+        district: district,
+      );
+
+      if (commodityFilter != null && commodityFilter.isNotEmpty) {
+        marketPrices = prices.where((p) => p.cropName.toLowerCase().contains(commodityFilter.toLowerCase())).toList();
+      } else {
+        marketPrices = prices;
+      }
+    } catch (e) {
+      priceError = 'Failed to load prices';
+      print('Error in AppState fetchMarketPrices: $e');
+    } finally {
+      isLoadingPrices = false;
+      notifyListeners();
+    }
+  }
+
   void setImages(List<String> images) {
     capturedImages = List<String>.from(images);
     notifyListeners();

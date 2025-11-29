@@ -379,8 +379,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               Icon(icon, color: Colors.white, size: 28),
               const Spacer(),
-              Text(title, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
-              Text(subtitle, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+              Text(
+                title,
+                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                subtitle,
+                style: const TextStyle(color: Colors.white70, fontSize: 12),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ],
           ),
         ),

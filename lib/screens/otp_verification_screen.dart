@@ -49,7 +49,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextButton.icon(
-                onPressed: () => context.pop(),
+                onPressed: () => context.canPop() ? context.pop() : context.go('/'),
                 icon: const Icon(LucideIcons.arrowLeft, color: AppColors.primaryDark, size: 18),
                 label: const Text('Back', style: TextStyle(color: AppColors.primaryDark)),
               ),

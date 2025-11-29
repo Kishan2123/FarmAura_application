@@ -73,10 +73,19 @@ class _AppHeaderState extends State<AppHeader> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               if (widget.showBack)
                 InkWell(
-                  onTap: () => widget.onBack != null ? widget.onBack!() : context.pop(),
+                  onTap: () {
+                    if (widget.onBack != null) {
+                      widget.onBack!();
+                    } else if (context.canPop()) {
+                      context.pop();
+                    } else {
+                      context.go('/dashboard');
+                    }
+                  },
                   borderRadius: BorderRadius.circular(20),
                   child: const Padding(
                     padding: EdgeInsets.all(8),
@@ -102,7 +111,14 @@ class _AppHeaderState extends State<AppHeader> {
                 ),
               if (widget.title != null) ...[
                 const SizedBox(width: 12),
-                Text(widget.title!, style: Theme.of(context).textTheme.titleMedium),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Text(
+                    widget.title!,
+                    style: Theme.of(context).textTheme.titleMedium,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ],
           ),

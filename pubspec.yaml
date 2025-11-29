@@ -11,6 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
   go_router: ^14.2.7
   google_fonts: ^6.2.1
   flutter_svg: ^2.0.10+1
@@ -24,9 +27,6 @@ dependencies:
   geolocator: ^13.0.1
   location: ^7.0.0
   geocoding: ^3.0.0
-  flutter_localizations:
-    sdk: flutter
-  intl: ^0.20.2
   shared_preferences: ^2.3.2
 
 dev_dependencies:
@@ -49,4 +49,5 @@ flutter:
     - assets/icons/location/
     - assets/icons/irrigation/
     - assets/images/
+    - assets/images/weather/
     - assets/data/

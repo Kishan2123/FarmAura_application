@@ -19,6 +19,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final languages = const [
     {'code': 'en', 'name': 'English', 'native': 'English'},
     {'code': 'hi', 'name': 'Hindi', 'native': 'Hindi'},
+    {'code': 'kn', 'name': 'Kannada', 'native': 'ಕನ್ನಡ'},
+    {'code': 'hi_KH', 'name': 'Khortha', 'native': 'खोरठा'},
     {'code': 'bn', 'name': 'Bengali', 'native': 'Bengali'},
     {'code': 'nag', 'name': 'Nagpuri', 'native': 'Nagpuri'},
     {'code': 'kur', 'name': 'Kurmali', 'native': 'Kurmali'},

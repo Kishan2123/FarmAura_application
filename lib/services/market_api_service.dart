@@ -1,18 +1,64 @@
-import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import '../models/market_price.dart';
 
 class MarketApiService {
-  Future<List<MarketPrice>> fetchMarketPrices() async {
-    // Placeholder implementation; replace with real API integration when available.
-    await Future.delayed(const Duration(milliseconds: 400));
-    return [
-      MarketPrice(cropName: 'Wheat', mandiName: 'Ranchi APMC Mandi', location: 'Ranchi, Jharkhand', currentPrice: 12180, previousPrice: 11500),
-      MarketPrice(cropName: 'Paddy', mandiName: 'Hazaribagh Mandi', location: 'Hazaribagh, Jharkhand', currentPrice: 10250, previousPrice: 9950),
-      MarketPrice(cropName: 'Maize', mandiName: 'Bokaro Mandi', location: 'Bokaro, Jharkhand', currentPrice: 8900, previousPrice: 9050),
-      MarketPrice(cropName: 'Mustard', mandiName: 'Dhanbad Mandi', location: 'Dhanbad, Jharkhand', currentPrice: 15200, previousPrice: 14600),
-      MarketPrice(cropName: 'Cotton', mandiName: 'Ahmedabad APMC', location: 'Ahmedabad, Gujarat', currentPrice: 7200, previousPrice: 6620),
-      MarketPrice(cropName: 'Tomato', mandiName: 'Local Mandi', location: 'Ranchi, Jharkhand', currentPrice: 2400, previousPrice: 2600),
-      MarketPrice(cropName: 'Potato', mandiName: 'Patna Mandi', location: 'Patna, Bihar', currentPrice: 1300, previousPrice: 1200),
-    ];
+  static const String _baseUrl = 'https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070';
+  static const String _apiKey = '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b';
+
+  Future<List<MarketPrice>> fetchMarketPrices({String? state, String? district}) async {
+    try {
+      // Try fetching with specific district first
+      List<MarketPrice> prices = await _fetchFromApi(state: state, district: district);
+      
+      // If no data found for district, try fetching for the whole state
+      if (prices.isEmpty && district != null && state != null) {
+        prices = await _fetchFromApi(state: state);
+      }
+
+      // If still empty, return a default fallback list or empty list
+      if (prices.isEmpty) {
+        // Fallback to empty list, UI will handle "No prices available"
+        return [];
+      }
+      
+      return prices;
+    } catch (e) {
+      print('Error fetching market prices: $e');
+      return [];
+    }
+  }
+
+  Future<List<MarketPrice>> _fetchFromApi({String? state, String? district}) async {
+    try {
+      final queryParams = {
+        'api-key': _apiKey,
+        'format': 'json',
+        'limit': '100',
+      };
+
+      if (state != null && state.isNotEmpty) {
+        queryParams['filters[state]'] = state;
+      }
+      if (district != null && district.isNotEmpty) {
+        queryParams['filters[district]'] = district;
+      }
+
+      final uri = Uri.parse(_baseUrl).replace(queryParameters: queryParams);
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final List<dynamic> records = data['records'] ?? [];
+        return records.map((json) => MarketPrice.fromJson(json)).toList();
+      } else {
+        print('API Error: ${response.statusCode} ${response.body}');
+        return [];
+      }
+    } catch (e) {
+      print('Network Error: $e');
+      return [];
+    }
   }
 }
+
