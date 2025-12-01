@@ -142,7 +142,10 @@ class VoiceAssistantService {
   }
 
   Future<void> speak(String text, String languageCode) async {
-    if (_azureKey.isEmpty) return;
+    if (_azureKey.isEmpty) {
+      print('❌ Error: Azure Speech Key is missing in .env');
+      return;
+    }
 
     final voiceName = _ttsVoices[languageCode] ?? 'en-IN-NeerjaNeural';
     final url = Uri.parse('https://$_azureRegion.tts.speech.microsoft.com/cognitiveservices/v1');
@@ -156,6 +159,7 @@ class VoiceAssistantService {
 ''';
 
     try {
+      print('🔊 Sending TTS request for: "${text.length > 20 ? text.substring(0, 20) + '...' : text}"');
       final response = await http.post(
         url,
         headers: {
@@ -169,13 +173,13 @@ class VoiceAssistantService {
 
       if (response.statusCode == 200) {
         final bytes = response.bodyBytes;
-        // Play audio directly from bytes
+        print('✅ TTS Audio received (${bytes.length} bytes). Playing...');
         await _player.play(BytesSource(bytes));
       } else {
-        print('TTS Error: ${response.body}');
+        print('❌ TTS Error: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      print('TTS Exception: $e');
+      print('❌ TTS Exception: $e');
     }
   }
   
