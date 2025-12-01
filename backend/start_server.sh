@@ -43,4 +43,7 @@ echo "Press Ctrl+C to stop the server"
 echo "================================"
 echo ""
 
+# Set port to 5001 to avoid conflict with AirPlay Receiver (port 5000)
+export PORT=5001
+
 python app.py
