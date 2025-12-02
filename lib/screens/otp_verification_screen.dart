@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../models/app_state.dart';
 import '../theme/app_theme.dart';
+import '../services/phone_auth_service.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   const OtpVerificationScreen({super.key, required this.appState, this.phoneNumber, this.isNewUser = false});
@@ -90,28 +91,37 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             child: const Text('Resend OTP', style: TextStyle(color: AppColors.primary)),
                           ),
                     const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: canProceed
-                            ? () {
-                                if (widget.isNewUser) {
-                                  context.go('/profile-setup');
-                                } else {
-                                  context.go('/dashboard');
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: canProceed
+                              ? () async {
+                                  final code = otp.trim();
+
+                                  if (code.length != 6) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Please enter 6-digit OTP')),
+                                    );
+                                    return;
+                                  }
+
+                                  await PhoneAuthService.instance.verifyOtp(
+                                    smsCode: code,
+                                    isNewUser: widget.isNewUser,
+                                    context: context,
+                                  );
                                 }
-                              }
-                            : null,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.white,
-                          disabledBackgroundColor: Colors.grey.shade300,
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            disabledBackgroundColor: Colors.grey.shade300,
+                          ),
+                          child: const Text('Verify & Continue'),
                         ),
-                        child: const Text('Verify & Continue'),
                       ),
-                    ),
                   ],
                 ),
               ),

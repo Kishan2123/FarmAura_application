@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../models/app_state.dart';
 import '../theme/app_theme.dart';
@@ -429,18 +431,44 @@ class _FarmSetupScreenState extends State<FarmSetupScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: canSubmit
-                          ? () {
+                          ? () async {
+                            final user = FirebaseAuth.instance.currentUser;
+                            if (user == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('No logged-in user. Please login again.')),
+                              );
+                              return;
+                            }
+
+                            final finalLandSize = showCustom ? customLandSize : landSize;
+                            
+                            // Update AppState
                             widget.appState.updateUserData({
-                              'landSize': showCustom ? customLandSize : landSize,
+                              'landSize': finalLandSize,
                               'irrigation': irrigation,
                               'pastCrops': selectedPastCrops,
                             });
                             widget.appState.updateFarmDetails({
-                              'landSize': showCustom ? customLandSize : landSize,
+                              'landSize': finalLandSize,
                               'irrigation': irrigation,
                               'pastCrops': selectedPastCrops,
                             });
-                            context.go('/dashboard');
+
+                            // Update Firestore
+                            try {
+                              await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+                                'landSize': finalLandSize,
+                                'irrigation': irrigation,
+                                'pastCrops': selectedPastCrops,
+                                'hasCompletedFarm': true,
+                              }, SetOptions(merge: true)).timeout(const Duration(seconds: 2));
+                            } catch (e) {
+                               // Proceed anyway
+                            }
+
+                            if (context.mounted) {
+                              context.go('/dashboard');
+                            }
                           }
                           : null,
                       style: ElevatedButton.styleFrom(
