@@ -39,7 +39,7 @@ class PestResultScreen extends StatelessWidget {
     Organic Alternative: ${diagnosis['organic_alternative'] ?? 'Not available'}.
     ''';
     
-    await _voiceService.speak(text, langCode);
+    await _voiceService.speak(text, langCode, id: 'pest_report');
   }
 
   Future<void> _saveReport(BuildContext context) async {
@@ -82,9 +82,25 @@ class PestResultScreen extends StatelessWidget {
                   showProfile: false, 
                   appState: appState, 
                   onBack: () => Navigator.of(context).pop(),
-                  trailing: IconButton(
-                    icon: const Icon(LucideIcons.volume2, color: AppColors.primaryDark),
-                    onPressed: () => _speakReport(context),
+                  trailing: StreamBuilder<String?>(
+                    stream: _voiceService.playingIdStream,
+                    builder: (context, snapshot) {
+                      final myId = 'pest_report';
+                      final isPlaying = snapshot.data == myId;
+                      return IconButton(
+                        icon: Icon(
+                          isPlaying ? LucideIcons.volumeX : LucideIcons.volume2,
+                          color: isPlaying ? Colors.red : AppColors.primaryDark,
+                        ),
+                        onPressed: () {
+                          if (isPlaying) {
+                            _voiceService.stopSpeaking();
+                          } else {
+                            _speakReport(context);
+                          }
+                        },
+                      );
+                    },
                   ),
                 ),
                 Expanded(
