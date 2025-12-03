@@ -5,6 +5,7 @@ import '../models/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/floating_ivr.dart';
 
+import '../services/phone_auth_service.dart';
 import 'package:farmaura/l10n/app_localizations.dart';
 
 class PhoneLoginScreen extends StatefulWidget {
@@ -137,11 +138,33 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: isValid
-                                ? () => context.go('/otp', extra: {
-                                      'phoneNumber': phone,
-                                      'shcNumber': shcNumber,
-                                      'isNewUser': widget.isNewUser,
-                                    })
+                                ? () async {
+                                    final raw = phone.trim();
+
+                                    if (raw.length != 10) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Please enter a valid 10-digit number')),
+                                      );
+                                      return;
+                                    }
+
+                                    final fullPhone = '+91$raw';
+
+                                    await PhoneAuthService.instance.sendOtp(
+                                      phoneNumber: fullPhone,
+                                      isNewUser: widget.isNewUser,
+                                      context: context,
+                                      onCodeSentNavigateToOtp: () {
+                                        context.push(
+                                          '/otp',
+                                          extra: {
+                                            'phoneNumber': fullPhone,
+                                            'isNewUser': widget.isNewUser,
+                                          },
+                                        );
+                                      },
+                                    );
+                                  }
                                 : null,
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),

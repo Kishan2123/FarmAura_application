@@ -7,6 +7,9 @@ import Foundation
 
 import audioplayers_darwin
 import file_selector_macos
+import cloud_firestore
+import firebase_auth
+import firebase_core
 import geolocator_apple
 import location
 import path_provider_foundation

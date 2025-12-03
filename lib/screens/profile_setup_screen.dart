@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../models/app_state.dart';
@@ -76,16 +78,42 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {
-                                if (!(_formKey.currentState?.validate() ?? false)) return;
-                                widget.appState.updateUserData({
-                                  'name': _nameCtrl.text,
-                                  'village': _villageCtrl.text,
-                                  'email': _emailCtrl.text,
-                                  'occupation': occupation,
-                                });
-                                context.go('/farm-setup');
-                              },
+                                onPressed: () async {
+                                  if (!(_formKey.currentState?.validate() ?? false)) return;
+                                  
+                                  final user = FirebaseAuth.instance.currentUser;
+                                  if (user == null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('No logged-in user. Please login again.')),
+                                    );
+                                    return;
+                                  }
+
+                                  // Update AppState
+                                  widget.appState.updateUserData({
+                                    'name': _nameCtrl.text,
+                                    'village': _villageCtrl.text,
+                                    'email': _emailCtrl.text,
+                                    'occupation': occupation,
+                                  });
+
+                                  // Update Firestore
+                                  try {
+                                    await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+                                      'name': _nameCtrl.text,
+                                      'village': _villageCtrl.text,
+                                      'email': _emailCtrl.text,
+                                      'occupation': occupation,
+                                      'hasCompletedProfile': true,
+                                    }, SetOptions(merge: true)).timeout(const Duration(seconds: 2));
+                                  } catch (e) {
+                                     // Proceed anyway if offline/error/timeout, state is updated
+                                  }
+
+                                  if (context.mounted) {
+                                    context.go('/farm-setup');
+                                  }
+                                },
                               style: ElevatedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),

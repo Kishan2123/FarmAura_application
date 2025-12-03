@@ -44,30 +44,24 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Python Backend
-backend/venv/
-backend/__pycache__/
-backend/*.pyc
-backend/*.pyo
-backend/*.pyd
-backend/.Python
-backend/env/
-backend/*.log
-backend/test_response_*.json
+# Firebase
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
 
-# Environment Variables
-.env
-.env.*
-**/.env
-**/.env.*
+# Android credentials
+android/local.properties
+android/key.properties
+android/app/*.keystore
+android/app/*.jks
+
+# Flutter build files
+build/
+.flutter-plugins*
+.flutter-plugins-dependencies*
+
+# Gradle cache
+.gradle/
+
+# Env files
 *.env
-backend/.env
-backend/.env.example
-.env.example
-
-
-# Large Datasets
-models/panIndia_JharkhandRich_crop_recommendation_300k.csv
-
-# Node modules
-**/node_modules/
+*.env.*
