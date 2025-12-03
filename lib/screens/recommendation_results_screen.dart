@@ -66,69 +66,81 @@ class _RecommendationResultsScreenState extends State<RecommendationResultsScree
 
   @override
   Widget build(BuildContext context) {
+    final recs = [
+      _Rec(
+        AppLocalizations.of(context)!.cotton,
+        AppLocalizations.of(context)!.excellentSoilMatch,
+        '95%',
+        '₹85,000',
+        '18-20 ${AppLocalizations.of(context)!.tonnesPerAcre}', // Using tonnes/acre as placeholder for quintals if needed or keep quintals hardcoded if not localized
+        'assets/icons/cotton.png',
+        LucideIcons.sprout,
+        true,
+        Colors.green,
+        1,
+      ),
+      _Rec(
+        AppLocalizations.of(context)!.soybean,
+        AppLocalizations.of(context)!.rotationBenefit,
+        '88%',
+        '₹65,000',
+        '12-15 ${AppLocalizations.of(context)!.tonnesPerAcre}',
+        'assets/icons/soybean.png',
+        LucideIcons.bean,
+        true,
+        Colors.orange,
+        2,
+      ),
+      _Rec(
+        AppLocalizations.of(context)!.maize,
+        AppLocalizations.of(context)!.weatherSuitability,
+        '82%',
+        '₹55,000',
+        '25-30 ${AppLocalizations.of(context)!.tonnesPerAcre}',
+        'assets/icons/corn.png',
+        LucideIcons.wheat,
+        true,
+        Colors.brown,
+        3,
+      ),
+    ];
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
-            Column(
-              children: [
-                AppHeader(
-                  title: AppLocalizations.of(context)!.recommendedCrops,
-                  showBack: true,
-                  showProfile: false,
-                  appState: widget.appState,
-                  onBack: () => Navigator.of(context).pop(),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.basedOnFarmConditions,
-                          style: const TextStyle(color: AppColors.muted, fontSize: 14),
-                        ),
-                        const SizedBox(height: 16),
-                        if (widget.recommendations.isEmpty)
-                          const Center(child: Text('No recommendations found.'))
-                        else
-                          ...widget.recommendations.asMap().entries.map((entry) {
-                            final index = entry.key;
-                            final rec = entry.value;
-                            return _RecommendationCard(
-                              rec: rec,
-                              rank: index + 1,
-                              appState: widget.appState,
-                              explanationFuture: _explanationFutures[rec['crop']]!,
-                              contextData: widget.contextData,
-                            );
-                          }),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              side: const BorderSide(color: AppColors.primary),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                            ),
-                            child: Text(
-                              AppLocalizations.of(context)!.tryDifferentInputs,
-                              style: const TextStyle(
-                                color: AppColors.primary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+            Positioned.fill(
+              child: Column(
+                children: [
+                  AppHeader(title: AppLocalizations.of(context)!.recommendedCrops, showBack: true, showProfile: false, appState: appState, onBack: () => Navigator.of(context).pop()),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(AppLocalizations.of(context)!.basedOnFarmConditions, style: const TextStyle(color: AppColors.muted, fontSize: 14)),
+                          const SizedBox(height: 16),
+                          ...recs.map((r) => _RecommendationCard(rec: r, appState: appState)),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                side: const BorderSide(color: AppColors.primary),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                               ),
+                              child: Text(AppLocalizations.of(context)!.tryDifferentInputs, style: const TextStyle(color: AppColors.primary, fontSize: 16, fontWeight: FontWeight.w600)),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
           ],

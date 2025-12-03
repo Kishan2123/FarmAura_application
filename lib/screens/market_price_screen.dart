@@ -3,13 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../models/app_state.dart';
 import '../models/market_price.dart';
-import '../services/market_api_service.dart';
+
 import '../theme/app_theme.dart';
 import '../widgets/app_header.dart';
 import '../widgets/app_footer.dart';
 import '../widgets/floating_ivr.dart';
 
 import 'package:farmaura/l10n/app_localizations.dart';
+
 class MarketPriceScreen extends StatefulWidget {
   const MarketPriceScreen({super.key, required this.appState});
   final AppState appState;
@@ -19,18 +20,51 @@ class MarketPriceScreen extends StatefulWidget {
 }
 
 class _MarketPriceScreenState extends State<MarketPriceScreen> {
-  late Future<List<MarketPrice>> _pricesFuture;
+  final List<String> _commodities = ['All', 'Wheat', 'Paddy', 'Rice', 'Maize', 'Cotton', 'Tomato', 'Potato', 'Onion', 'Mustard'];
+  String _selectedCommodity = 'All';
 
   @override
   void initState() {
     super.initState();
-    _pricesFuture = MarketApiService().fetchMarketPrices();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchPrices();
+    });
   }
 
-  Future<void> _retry() async {
-    setState(() {
-      _pricesFuture = MarketApiService().fetchMarketPrices();
-    });
+  Future<void> _fetchPrices() async {
+    await widget.appState.fetchMarketPrices(
+      commodityFilter: _selectedCommodity == 'All' ? null : _selectedCommodity,
+    );
+  }
+
+  Future<void> _onRefresh() async {
+    await _fetchPrices();
+  }
+
+  void _onCommodityChanged(String? value) {
+    if (value != null) {
+      setState(() {
+        _selectedCommodity = value;
+      });
+      _fetchPrices();
+    }
+  }
+
+  String _getLocalizedCommodity(BuildContext context, String commodity) {
+    final loc = AppLocalizations.of(context)!;
+    switch (commodity) {
+      case 'All': return loc.all;
+      case 'Wheat': return loc.wheat;
+      case 'Paddy': return loc.paddy;
+      case 'Rice': return loc.rice;
+      case 'Maize': return loc.maize;
+      case 'Cotton': return loc.cotton;
+      case 'Tomato': return loc.tomato;
+      case 'Potato': return loc.potato;
+      case 'Onion': return loc.onion;
+      case 'Mustard': return loc.mustard;
+      default: return commodity;
+    }
   }
 
   String _formatPrice(num value) => '₹${value.toStringAsFixed(0)}';
@@ -75,7 +109,7 @@ class _MarketPriceScreenState extends State<MarketPriceScreen> {
 
   Widget _bestMandiCard(MarketPrice price, {String badge = 'Recommended'}) {
     final transportCost = 200;
-    final estimatedProfit = price.currentPrice * 12 - transportCost;
+    final estimatedProfit = price.currentPrice * 12 - transportCost; // Dummy logic preserved
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -113,7 +147,7 @@ class _MarketPriceScreenState extends State<MarketPriceScreen> {
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 4),
-          Text('15 km away • ${price.location}', style: const TextStyle(color: AppColors.muted)),
+          Text('${AppLocalizations.of(context)!.kmAway('15')} • ${price.location}', style: const TextStyle(color: AppColors.muted)),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -198,69 +232,64 @@ class _MarketPriceScreenState extends State<MarketPriceScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            Column(
-              children: [
-                AppHeader(title: AppLocalizations.of(context)!.marketPrices, showBack: true, showProfile: false, appState: widget.appState, onBack: () => Navigator.canPop(context) ? context.pop() : context.go('/dashboard')),
-                Expanded(
-                  child: FutureBuilder<List<MarketPrice>>(
-                    future: _pricesFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
+            Positioned.fill(
+              child: Column(
+                children: [
+                  AppHeader(title: AppLocalizations.of(context)!.marketPrices, showBack: true, showProfile: false, appState: widget.appState, onBack: () => Navigator.canPop(context) ? context.pop() : context.go('/dashboard')),
+                  Expanded(
+                    child: ListenableBuilder(
+                      listenable: widget.appState,
+                      builder: (context, _) {
+                        if (widget.appState.isLoadingPrices) {
+                          return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+                        }
+                        final prices = widget.appState.marketPrices;
+                        final best = _pickTop(prices);
+                        return RefreshIndicator(
+                          onRefresh: _onRefresh,
+                          color: AppColors.primary,
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
                             child: Column(
-                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const CircularProgressIndicator(),
-                                const SizedBox(height: 12),
-                                Text(AppLocalizations.of(context)!.fetchingPrices),
+                                _updatedCard(),
+                                const SizedBox(height: 24),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: _commodities.map((c) {
+                                      final isSelected = _selectedCommodity == c;
+                                      return Padding(
+                                        padding: const EdgeInsets.only(right: 8),
+                                        child: ChoiceChip(
+                                          label: Text(_getLocalizedCommodity(context, c)),
+                                          selected: isSelected,
+                                          onSelected: (v) => _onCommodityChanged(v ? c : null),
+                                          selectedColor: AppColors.primary,
+                                          labelStyle: TextStyle(color: isSelected ? Colors.white : AppColors.primaryDark),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                if (best.isNotEmpty) ...[
+                                  ..._bestMandiSection(best),
+                                  const SizedBox(height: 24),
+                                ],
+                                _allPrices(prices),
                               ],
                             ),
                           ),
                         );
-                      }
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(AppLocalizations.of(context)!.couldNotLoadPrices),
-                              const SizedBox(height: 8),
-                              ElevatedButton(onPressed: _retry, child: Text(AppLocalizations.of(context)!.retry)),
-                            ],
-                          ),
-                        );
-                      }
-                      final prices = snapshot.data ?? [];
-                      if (prices.isEmpty) {
-                        return Center(child: Text(AppLocalizations.of(context)!.noPricesAvailable));
-                      }
-                      final bestList = _pickTop(prices);
-                      return SingleChildScrollView(
-                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16 + kBottomNavigationBarHeight),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 8),
-                            Text(AppLocalizations.of(context)!.marketPrices, style: const TextStyle(color: AppColors.primaryDark, fontSize: 20, fontWeight: FontWeight.w700)),
-                            const SizedBox(height: 4),
-                            Text(AppLocalizations.of(context)!.livePrices, style: const TextStyle(color: AppColors.muted)),
-                            const SizedBox(height: 16),
-                            _updatedCard(),
-                            const SizedBox(height: 20),
-                            ..._bestMandiSection(bestList),
-                            const SizedBox(height: 24),
-                            _allPrices(prices),
-                          ],
-                        ),
-                      );
-                    },
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
+            const FloatingIVR(),
           ],
         ),
       ),
@@ -305,7 +334,7 @@ class _MarketPriceCard extends StatelessWidget {
                     Text(formatPrice(price.currentPrice), style: const TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.w700)),
                     const SizedBox(width: 8),
                     Flexible(
-                      child: Text('MSP/Prev ${formatPrice(price.previousPrice)}', style: const TextStyle(color: AppColors.muted, fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
+                      child: Text(AppLocalizations.of(context)!.mspPrev(formatPrice(price.previousPrice)), style: const TextStyle(color: AppColors.muted, fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
                     ),
                   ],
                 ),

@@ -6,6 +6,7 @@ import '../theme/app_theme.dart';
 import '../widgets/floating_ivr.dart';
 
 import 'package:farmaura/l10n/app_localizations.dart';
+
 class PhoneLoginScreen extends StatefulWidget {
   const PhoneLoginScreen({super.key, required this.appState, this.isNewUser = false});
   final AppState appState;
@@ -147,15 +148,14 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
                               backgroundColor: AppColors.primary,
                               foregroundColor: Colors.white,
-                              disabledBackgroundColor: Colors.grey.shade300,
                             ),
-                            child: Text(loginType == 'phone' ? AppLocalizations.of(context)!.sendOtp : AppLocalizations.of(context)!.submit),
+                            child: Text(AppLocalizations.of(context)!.continueText),
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'By continuing, you agree to our Terms & Privacy Policy',
-                          style: TextStyle(color: AppColors.muted, fontSize: 12),
+                        const SizedBox(height: 16),
+                        Text(
+                          AppLocalizations.of(context)!.termsAndConditions,
+                          style: const TextStyle(color: AppColors.muted, fontSize: 12),
                           textAlign: TextAlign.center,
                         ),
                       ],

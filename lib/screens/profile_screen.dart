@@ -118,28 +118,18 @@ class ProfileScreen extends StatelessWidget {
                       (user['occupation'] as String?)?.isNotEmpty == true ? user['occupation'] as String : AppLocalizations.of(context)!.farmer,
                       style: const TextStyle(color: Colors.white70, fontSize: 13),
                     ),
-                    const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        const Icon(LucideIcons.mapPin, color: Colors.white, size: 16),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            locationLine.isNotEmpty ? locationLine : AppLocalizations.of(context)!.jharkhand,
-                            style: const TextStyle(color: Colors.white70, fontSize: 13),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(LucideIcons.phone, color: Colors.white, size: 16),
-                        const SizedBox(width: 6),
-                        Text(
-                          user['phone']?.toString().isNotEmpty == true ? user['phone'] as String : '+91 00000 00000',
-                          style: const TextStyle(color: Colors.white70, fontSize: 13),
+                        const Icon(LucideIcons.mapPin, color: Colors.white70, size: 12),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            locationLine.isNotEmpty ? locationLine : AppLocalizations.of(context)!.jharkhand,
+                            style: const TextStyle(color: Colors.white70, fontSize: 12),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),

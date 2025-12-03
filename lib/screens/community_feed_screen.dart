@@ -23,67 +23,69 @@ class CommunityFeedScreen extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            Column(
-              children: [
-                AppHeader(
-                  title: AppLocalizations.of(context)!.community,
-                  showBack: true,
-                  showProfile: false,
-                  appState: appState,
-                  onBack: () => Navigator.canPop(context) ? context.pop() : context.go('/dashboard'),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-                    child: Column(
-                      children: posts
-                          .map(
-                            (post) => Container(
-                              margin: const EdgeInsets.only(bottom: 12),
-                              padding: const EdgeInsets.all(14),
-                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 12, offset: const Offset(0, 10))]),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundColor: AppColors.primary.withOpacity(0.15),
-                                        child: Text((post['name'] as String)[0]),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(post['name'] as String, style: const TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.w700)),
-                                          Text(post['village'] as String, style: const TextStyle(color: AppColors.muted, fontSize: 12)),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(post['text'] as String, style: const TextStyle(color: AppColors.primaryDark)),
-                                  const SizedBox(height: 12),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.favorite_border, color: Colors.red.shade400),
-                                      const SizedBox(width: 4),
-                                      Text('${post['likes']}'),
-                                      const SizedBox(width: 16),
-                                      const Icon(Icons.mode_comment_outlined, color: AppColors.muted),
-                                      const SizedBox(width: 4),
-                                      Text('${post['comments']}'),
-                                    ],
-                                  ),
-                                ],
+            Positioned.fill(
+              child: Column(
+                children: [
+                  AppHeader(
+                    title: AppLocalizations.of(context)!.community,
+                    showBack: true,
+                    showProfile: false,
+                    appState: appState,
+                    onBack: () => Navigator.canPop(context) ? context.pop() : context.go('/dashboard'),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                      child: Column(
+                        children: posts
+                            .map(
+                              (post) => Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 12, offset: const Offset(0, 10))]),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundColor: AppColors.primary.withOpacity(0.15),
+                                          child: Text((post['name'] as String)[0]),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(post['name'] as String, style: const TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.w700)),
+                                            Text(post['village'] as String, style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(post['text'] as String, style: const TextStyle(color: AppColors.primaryDark)),
+                                    const SizedBox(height: 12),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.favorite_border, color: Colors.red.shade400),
+                                        const SizedBox(width: 4),
+                                        Text('${post['likes']}'),
+                                        const SizedBox(width: 16),
+                                        const Icon(Icons.mode_comment_outlined, color: AppColors.muted),
+                                        const SizedBox(width: 4),
+                                        Text('${post['comments']}'),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          )
-                          .toList(),
+                            )
+                            .toList(),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
           ],

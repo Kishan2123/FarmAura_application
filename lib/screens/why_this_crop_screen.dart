@@ -151,25 +151,25 @@ class WhyThisCropScreen extends StatelessWidget {
                         const SizedBox(height: 16),
                         _FactorCard(
                           title: AppLocalizations.of(context)!.excellentSoilMatch,
-                          description: 'Soil pH $ph is suitable. Nutrient requirements: N ($n kg/ha), P ($p kg/ha), K ($k kg/ha).',
+                          description: AppLocalizations.of(context)!.excellentSoilMatchDesc,
                           icon: LucideIcons.sprout,
                           color: Colors.green,
                         ),
                         _FactorCard(
                           title: AppLocalizations.of(context)!.weatherSuitability,
-                          description: 'Optimal temperature ($temp°C) and rainfall ($rain mm) for this season.',
+                          description: AppLocalizations.of(context)!.weatherSuitabilityDesc,
                           icon: Icons.wb_sunny_outlined,
                           color: Colors.orange,
                         ),
                         _FactorCard(
                           title: AppLocalizations.of(context)!.rotationBenefit,
-                          description: 'Good rotation option after $prevCrop to maintain soil health.',
+                          description: AppLocalizations.of(context)!.rotationBenefitDesc,
                           icon: Icons.sync,
                           color: Colors.blue,
                         ),
                         _FactorCard(
                           title: AppLocalizations.of(context)!.marketAdvantage,
-                          description: '$market. Expected profit: ₹$profit/ha.',
+                          description: AppLocalizations.of(context)!.marketAdvantageDesc,
                           icon: Icons.attach_money,
                           color: Colors.amber,
                         ),
@@ -213,7 +213,7 @@ class WhyThisCropScreen extends StatelessWidget {
                                     Text(AppLocalizations.of(context)!.fertilizerSuggestion, style: const TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.w700)),
                                     const SizedBox(height: 4),
                                     Text(
-                                      fertilizerNote,
+                                      AppLocalizations.of(context)!.proTipContent,
                                       style: const TextStyle(color: AppColors.primaryDark, fontSize: 13, height: 1.4),
                                     ),
                                   ],

@@ -21,10 +21,10 @@ class SoilDetailsScreen extends StatelessWidget {
     ];
 
     final insights = [
-      'Your soil is rich in organic matter', // TODO: Localize dynamic insights if possible or keep generic
-      'Consider adding phosphorus fertilizer',
-      'pH level is ideal for most crops',
-      'Good water retention capacity',
+      AppLocalizations.of(context)!.soilInsights, // Using generic title for now as specific insights are dynamic
+      AppLocalizations.of(context)!.soilRecommendations,
+      AppLocalizations.of(context)!.phLevel,
+      AppLocalizations.of(context)!.soilMoisture,
     ];
 
     return Scaffold(

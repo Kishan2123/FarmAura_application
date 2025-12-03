@@ -39,7 +39,7 @@ class _FarmauraAppState extends State<FarmauraApp> {
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
       routerConfig: _router,
-      locale: Locale(appState.userLanguage == 'Hindi' ? 'hi' : 'en'),
+      locale: _getLocale(appState.userLanguage),
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -49,7 +49,22 @@ class _FarmauraAppState extends State<FarmauraApp> {
       supportedLocales: const [
         Locale('en'),
         Locale('hi'),
+        Locale('kn', 'IN'),
+        Locale('hi', 'KH'),
       ],
     );
+  }
+
+  Locale _getLocale(String language) {
+    switch (language) {
+      case 'Hindi':
+        return const Locale('hi');
+      case 'Kannada':
+        return const Locale('kn', 'IN');
+      case 'Khortha':
+        return const Locale('hi', 'KH');
+      default:
+        return const Locale('en');
+    }
   }
 }

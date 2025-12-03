@@ -18,6 +18,8 @@ class _LanguageChangeModalState extends State<LanguageChangeModal> {
   final languages = const [
     {'code': 'en', 'name': 'English', 'nativeName': 'English', 'flag': 'IN'},
     {'code': 'hi', 'name': 'Hindi', 'nativeName': 'Hindi', 'flag': 'IN'},
+    {'code': 'kn', 'name': 'Kannada', 'nativeName': 'ಕನ್ನಡ', 'flag': 'IN'},
+    {'code': 'hi_KH', 'name': 'Khortha', 'nativeName': 'खोरठा', 'flag': 'IN'},
     {'code': 'bn', 'name': 'Bengali', 'nativeName': 'Bangla', 'flag': 'IN'},
     {'code': 'nag', 'name': 'Nagpuri', 'nativeName': 'Nagpuri', 'flag': 'IN'},
     {'code': 'kur', 'name': 'Kurmali', 'nativeName': 'Kurmali', 'flag': 'IN'},
