@@ -2173,6 +2173,12 @@ abstract class AppLocalizations {
   /// **'Ensure proper drainage to prevent waterlogging.'**
   String get proTipContent;
 
+  /// No description provided for @fertilizerSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Fertilizer suggestion'**
+  String get fertilizerSuggestion;
+
   /// No description provided for @termsAndConditions.
   ///
   /// In en, this message translates to:

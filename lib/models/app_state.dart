@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/location_service.dart';
 import 'package:geolocator/geolocator.dart';
 import '../models/market_price.dart';
+import '../models/weather.dart';
 import '../services/market_api_service.dart';
 
 class AppState extends ChangeNotifier {

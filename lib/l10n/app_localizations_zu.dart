@@ -1062,6 +1062,9 @@ class AppLocalizationsZu extends AppLocalizations {
   String get proTipContent => 'Ensure proper drainage to prevent waterlogging.';
 
   @override
+  String get fertilizerSuggestion => 'Fertilizer suggestion';
+
+  @override
   String get termsAndConditions =>
       'By continuing, you agree to our Terms & Privacy Policy';
 }

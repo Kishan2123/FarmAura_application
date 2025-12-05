@@ -1066,6 +1066,9 @@ class AppLocalizationsHi extends AppLocalizations {
       'Ensure proper spacing of 2-3 feet between plants and maintain adequate irrigation during flowering stage for maximum yield.';
 
   @override
+  String get fertilizerSuggestion => 'उर्वरक सुझाव';
+
+  @override
   String get termsAndConditions =>
       'जारी रखकर, आप हमारी शर्तों और गोपनीयता नीति से सहमत होते हैं';
 }

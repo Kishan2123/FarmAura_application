@@ -12,7 +12,8 @@
     "weatherSuitabilityDesc",
     "rotationBenefitDesc",
     "marketAdvantageDesc",
-    "proTipContent"
+    "proTipContent",
+    "fertilizerSuggestion"
   ],
 
   "kn": [
@@ -23,7 +24,8 @@
     "weatherSuitabilityDesc",
     "rotationBenefitDesc",
     "marketAdvantageDesc",
-    "proTipContent"
+    "proTipContent",
+    "fertilizerSuggestion"
   ],
 
   "zu": [
@@ -372,6 +374,7 @@
     "rotationBenefitDesc",
     "marketAdvantageDesc",
     "proTipContent",
+    "fertilizerSuggestion",
     "termsAndConditions"
   ]
 }

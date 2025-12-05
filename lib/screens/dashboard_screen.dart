@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -180,7 +181,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _Update(title: AppLocalizations.of(context)!.wheatPrice, icon: LucideIcons.trendingUp, color: Colors.green.shade100, textColor: Colors.green.shade700, path: '/market'),
     ];
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, dynamic result) async {
+        if (didPop) return;
+        
+        // Show confirmation dialog before exiting app
+        final shouldPop = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(AppLocalizations.of(context)!.appTitle),
+            content: const Text('Do you want to exit FarmAura?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                child: const Text('Exit'),
+              ),
+            ],
+          ),
+        );
+        
+        if (shouldPop == true && context.mounted) {
+          // Exit the app
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
       key: _scaffoldKey,
       drawer: _AppDrawer(
         appState: widget.appState,
@@ -396,6 +427,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
       ),
+    ),
     );
   }
 

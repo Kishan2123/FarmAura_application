@@ -539,10 +539,11 @@ class _CombinedInputScreenState extends State<CombinedInputScreen> {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: isValid
-                                  ? () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (_) => RecommendationResultsScreen(appState: widget.appState)),
-                                      );
+                                  ? () async {
+                                      if (soilInputMode == 'auto') {
+                                        await _autoFillParameters();
+                                      }
+                                      await _getRecommendation();
                                     }
                                   : null,
                               style: ElevatedButton.styleFrom(

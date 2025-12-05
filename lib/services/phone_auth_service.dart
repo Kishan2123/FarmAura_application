@@ -1,5 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -10,8 +11,12 @@ class PhoneAuthService {
   static final PhoneAuthService instance = PhoneAuthService._internal();
   PhoneAuthService._internal();
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
+  final firestore.FirebaseFirestore _firestore = firestore.FirebaseFirestore.instance;
+
+  PhoneAuthService() {
+    _auth.setLanguageCode('en');
+  }
 
   String? _verificationId;
 
@@ -30,11 +35,11 @@ class PhoneAuthService {
     try {
       await _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
+        verificationCompleted: (auth.PhoneAuthCredential credential) async {
           // Auto-resolution (Android only)
           await _signInWithCredential(credential, context);
         },
-        verificationFailed: (FirebaseAuthException e) {
+        verificationFailed: (auth.FirebaseAuthException e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Verification Failed: ${e.message}')),
           );
@@ -73,12 +78,12 @@ class PhoneAuthService {
     }
 
     try {
-      final credential = PhoneAuthProvider.credential(
+      final credential = auth.PhoneAuthProvider.credential(
         verificationId: _verificationId!,
         smsCode: smsCode,
       );
       await _signInWithCredential(credential, context);
-    } on FirebaseAuthException catch (e) {
+    } on auth.FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Invalid OTP: ${e.message}')),
       );
@@ -90,7 +95,7 @@ class PhoneAuthService {
   }
 
   /// Internal method to sign in and handle user redirection
-  Future<void> _signInWithCredential(PhoneAuthCredential credential, BuildContext context) async {
+  Future<void> _signInWithCredential(auth.PhoneAuthCredential credential, BuildContext context) async {
     try {
       final userCredential = await _auth.signInWithCredential(credential);
       final user = userCredential.user;
@@ -110,7 +115,7 @@ class PhoneAuthService {
   }
 
   /// Handles logic after successful login (Firestore check & Redirection)
-  Future<void> _handlePostLogin(User user, BuildContext context) async {
+  Future<void> _handlePostLogin(auth.User user, BuildContext context) async {
     try {
       final userRef = _firestore.collection('users').doc(user.uid);
       final snap = await userRef.get();
@@ -126,7 +131,7 @@ class PhoneAuthService {
         await userRef.set({
           'uid': user.uid,
           'phoneNumber': user.phoneNumber,
-          'createdAt': FieldValue.serverTimestamp(),
+          'createdAt': firestore.FieldValue.serverTimestamp(),
           'hasCompletedProfile': false,
           'hasCompletedFarm': false,
         });

@@ -1064,6 +1064,9 @@ class AppLocalizationsKn extends AppLocalizations {
   String get proTipContent => 'Ensure proper drainage to prevent waterlogging.';
 
   @override
+  String get fertilizerSuggestion => 'Fertilizer suggestion';
+
+  @override
   String get termsAndConditions =>
       'ಮುಂದುವರಿಯುವ ಮೂಲಕ, ನೀವು ನಮ್ಮ ನಿಯಮಗಳು ಮತ್ತು ಗೌಪ್ಯತೆ ನೀತಿಯನ್ನು ಒಪ್ಪುತ್ತೀರಿ';
 }

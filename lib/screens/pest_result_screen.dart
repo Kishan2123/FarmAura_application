@@ -159,19 +159,19 @@ class PestResultScreen extends StatelessWidget {
                         const SizedBox(height: 16),
                         _ActionCard(
                           title: AppLocalizations.of(context)!.chemicalControl,
-                          description: 'Spray Mancozeb 75 WP @ 2.5g/liter of water.',
+                          description: diagnosis['chemical_control'] ?? 'Not available',
                           icon: LucideIcons.flaskConical,
                           color: Colors.blue,
                         ),
                         _ActionCard(
                           title: AppLocalizations.of(context)!.biologicalControl,
-                          description: 'Use Pseudomonas fluorescens @ 10g/liter.',
+                          description: diagnosis['biological_control'] ?? 'Not available',
                           icon: LucideIcons.leaf,
                           color: Colors.green,
                         ),
                         _ActionCard(
                           title: AppLocalizations.of(context)!.organicAlternativeTitle,
-                          description: AppLocalizations.of(context)!.organicAlternativeDesc,
+                          description: diagnosis['organic_alternative'] ?? 'Not available',
                           icon: LucideIcons.sprout,
                           color: Colors.orange,
                         ),

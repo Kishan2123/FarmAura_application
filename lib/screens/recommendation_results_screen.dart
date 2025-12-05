@@ -66,45 +66,6 @@ class _RecommendationResultsScreenState extends State<RecommendationResultsScree
 
   @override
   Widget build(BuildContext context) {
-    final recs = [
-      _Rec(
-        AppLocalizations.of(context)!.cotton,
-        AppLocalizations.of(context)!.excellentSoilMatch,
-        '95%',
-        '₹85,000',
-        '18-20 ${AppLocalizations.of(context)!.tonnesPerAcre}', // Using tonnes/acre as placeholder for quintals if needed or keep quintals hardcoded if not localized
-        'assets/icons/cotton.png',
-        LucideIcons.sprout,
-        true,
-        Colors.green,
-        1,
-      ),
-      _Rec(
-        AppLocalizations.of(context)!.soybean,
-        AppLocalizations.of(context)!.rotationBenefit,
-        '88%',
-        '₹65,000',
-        '12-15 ${AppLocalizations.of(context)!.tonnesPerAcre}',
-        'assets/icons/soybean.png',
-        LucideIcons.bean,
-        true,
-        Colors.orange,
-        2,
-      ),
-      _Rec(
-        AppLocalizations.of(context)!.maize,
-        AppLocalizations.of(context)!.weatherSuitability,
-        '82%',
-        '₹55,000',
-        '25-30 ${AppLocalizations.of(context)!.tonnesPerAcre}',
-        'assets/icons/corn.png',
-        LucideIcons.wheat,
-        true,
-        Colors.brown,
-        3,
-      ),
-    ];
-
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -112,7 +73,7 @@ class _RecommendationResultsScreenState extends State<RecommendationResultsScree
             Positioned.fill(
               child: Column(
                 children: [
-                  AppHeader(title: AppLocalizations.of(context)!.recommendedCrops, showBack: true, showProfile: false, appState: appState, onBack: () => Navigator.of(context).pop()),
+                  AppHeader(title: AppLocalizations.of(context)!.recommendedCrops, showBack: true, showProfile: false, appState: widget.appState, onBack: () => Navigator.of(context).pop()),
                   Expanded(
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
@@ -121,7 +82,18 @@ class _RecommendationResultsScreenState extends State<RecommendationResultsScree
                         children: [
                           Text(AppLocalizations.of(context)!.basedOnFarmConditions, style: const TextStyle(color: AppColors.muted, fontSize: 14)),
                           const SizedBox(height: 16),
-                          ...recs.map((r) => _RecommendationCard(rec: r, appState: appState)),
+                          ...widget.recommendations.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final rec = entry.value;
+                            final cropName = rec['crop'] ?? 'Unknown';
+                            return _RecommendationCard(
+                              rec: rec,
+                              rank: index + 1,
+                              appState: widget.appState,
+                              explanationFuture: _explanationFutures[cropName] ?? Future.value('No explanation available'),
+                              contextData: widget.contextData,
+                            );
+                          }),
                           const SizedBox(height: 20),
                           SizedBox(
                             width: double.infinity,

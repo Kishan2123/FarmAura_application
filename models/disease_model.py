@@ -36,8 +36,30 @@ class DiseaseModel:
             return
 
         try:
+            import tensorflow as tf
             from tensorflow import keras
-            self.model = keras.models.load_model(self.model_path)
+            
+            # Custom deserializers to handle legacy parameters
+            class LegacyInputLayer(keras.layers.InputLayer):
+                def __init__(self, *args, batch_shape=None, **kwargs):
+                    if batch_shape is not None:
+                        # Convert batch_shape to input_shape
+                        kwargs['input_shape'] = batch_shape[1:]
+                    super().__init__(*args, **kwargs)
+            
+            class LegacyResizing(keras.layers.Resizing):
+                def __init__(self, *args, pad_to_aspect_ratio=False, fill_mode='constant', 
+                           fill_value=0.0, data_format='channels_last', **kwargs):
+                    # Ignore all unsupported parameters in newer TensorFlow versions
+                    super().__init__(*args, **kwargs)
+            
+            # Load with custom objects
+            with keras.utils.custom_object_scope({
+                'InputLayer': LegacyInputLayer,
+                'Resizing': LegacyResizing
+            }):
+                self.model = keras.models.load_model(self.model_path, compile=False)
+            
             print(f"Model loaded successfully from {self.model_path}")
         except Exception as e:
             print(f"Error loading model: {e}")

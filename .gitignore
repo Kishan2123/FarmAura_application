@@ -44,6 +44,27 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Python Backend
+backend/venv/
+backend/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/*.pyd
+backend/.Python
+backend/env/
+backend/*.log
+backend/test_response_*.json
+
+# Environment Variables
+.env
+.env.*
+**/.env
+**/.env.*
+*.env
+backend/.env
+backend/.env.example
+.env.example
+
 # Firebase
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
@@ -62,6 +83,8 @@ build/
 # Gradle cache
 .gradle/
 
-# Env files
-*.env
-*.env.*
+# Large Datasets
+models/panIndia_JharkhandRich_crop_recommendation_300k.csv
+
+# Node modules
+**/node_modules/
