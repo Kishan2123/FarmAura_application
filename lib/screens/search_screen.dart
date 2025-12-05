@@ -94,12 +94,20 @@ class _SearchScreenState extends State<SearchScreen> {
         title: TextField(
           controller: _controller,
           autofocus: true,
-          decoration: const InputDecoration(
+          cursorColor: AppColors.primaryDark,
+          decoration: InputDecoration(
             hintText: 'Search features, crops, pests...',
             border: InputBorder.none,
-            hintStyle: TextStyle(color: Colors.white70),
+            hintStyle: TextStyle(color: AppColors.muted),
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(
+            color: AppColors.primaryDark,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
           onChanged: (val) => setState(() => _query = val),
         ),
         backgroundColor: AppColors.primary,
