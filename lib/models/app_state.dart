@@ -161,22 +161,36 @@ class AppState extends ChangeNotifier {
       };
 
       if (placemark != null) {
-        newLocation['district'] = placemark.subAdministrativeArea ?? placemark.locality ?? 'Unknown';
+        newLocation['district'] = LocationService.normalizeDistrict(placemark.subAdministrativeArea ?? placemark.locality);
         newLocation['state'] = placemark.administrativeArea ?? 'Unknown';
+      } else {
+        newLocation['district'] = LocationService.normalizeDistrict(null); // Fallback
+        newLocation['state'] = 'Jharkhand'; // Default state if district is default
       }
 
       updateLocation(newLocation);
       
       // Sync with user profile data
-      if (placemark != null) {
-        updateUserData({
-          'district': newLocation['district'],
-          'state': newLocation['state'],
-        });
-      }
+      updateUserData({
+        'district': newLocation['district'],
+        'state': newLocation['state'],
+      });
+      
     } catch (e) {
       print('Error updating location: $e');
-      rethrow;
+      // Fallback on error
+      final fallbackLocation = {
+        'lat': 23.7957, // Dhanbad Lat
+        'lon': 86.4304, // Dhanbad Lon
+        'district': LocationService.normalizeDistrict(null),
+        'state': 'Jharkhand',
+        'detected': false,
+      };
+      updateLocation(fallbackLocation);
+      updateUserData({
+        'district': fallbackLocation['district'],
+        'state': fallbackLocation['state'],
+      });
     }
   }
 
@@ -193,7 +207,8 @@ class AppState extends ChangeNotifier {
       notifyListeners();
 
       final state = location['state']?.toString();
-      final district = location['district']?.toString();
+
+      final district = LocationService.normalizeDistrict(location['district']?.toString());
 
       if (state == null) {
         priceError = 'Location not detected';

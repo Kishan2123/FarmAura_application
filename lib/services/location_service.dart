@@ -53,4 +53,13 @@ class LocationService {
     }
     return null;
   }
+  static String normalizeDistrict(String? district) {
+    if (district == null || 
+        district.trim().isEmpty || 
+        district == "Unavailable" || 
+        district == "Unknown") {
+      return "Dhanbad";
+    }
+    return district.trim();
+  }
 }

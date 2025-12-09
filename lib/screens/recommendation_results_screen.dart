@@ -9,6 +9,7 @@ import 'why_this_crop_screen.dart';
 import '../services/crop_recommendation_service.dart';
 import '../services/voice_assistant_service.dart';
 import '../utils/narration_templates.dart';
+import '../utils/language_localizer.dart';
 
 import 'package:farmaura/l10n/app_localizations.dart';
 
@@ -46,13 +47,18 @@ class _RecommendationResultsScreenState extends State<RecommendationResultsScree
   void _preloadExplanations() {
     for (var rec in widget.recommendations) {
       final cropName = rec['crop'];
+      final lang = widget.appState.userLanguage;
+      
       _explanationFutures[cropName] = CropRecommendationService().getExplanation(
         cropName: cropName,
         state: widget.contextData['state'] ?? '',
         district: widget.contextData['district'] ?? '',
         frequentCrop: widget.contextData['frequentCrop'] ?? '',
         landSize: (widget.contextData['landSize'] ?? 1.0).toDouble(),
-      );
+      ).then((text) async {
+        if (lang == 'English') return text;
+        return LanguageLocalizer().localize(text, lang);
+      });
     }
   }
 

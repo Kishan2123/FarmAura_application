@@ -7,11 +7,12 @@ import '../widgets/floating_ivr.dart';
 import 'package:farmaura/l10n/app_localizations.dart';
 import '../services/voice_assistant_service.dart';
 import '../services/disease_detection_service.dart';
+import '../utils/language_localizer.dart';
 
 import 'dart:io';
 
-class PestResultScreen extends StatelessWidget {
-  PestResultScreen({
+class PestResultScreen extends StatefulWidget {
+  const PestResultScreen({
     super.key,
     required this.appState,
     required this.scanResult,
@@ -23,20 +24,68 @@ class PestResultScreen extends StatelessWidget {
   final Map<String, dynamic> scanResult;
   final Map<String, dynamic> diagnosis;
   final String imagePath;
+
+  @override
+  State<PestResultScreen> createState() => _PestResultScreenState();
+}
+
+class _PestResultScreenState extends State<PestResultScreen> {
   final VoiceAssistantService _voiceService = VoiceAssistantService();
   final DiseaseDetectionService _diseaseService = DiseaseDetectionService();
+  
+  Map<String, String> _translatedDiagnosis = {};
+  bool _isLoadingTranslation = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _translateContent();
+  }
+
+  Future<void> _translateContent() async {
+    final lang = widget.appState.userLanguage;
+    final chemical = widget.diagnosis['chemical_control'] ?? 'Not available';
+    final biological = widget.diagnosis['biological_control'] ?? 'Not available';
+    final organic = widget.diagnosis['organic_alternative'] ?? 'Not available';
+
+    if (lang == 'English') {
+      _translatedDiagnosis = {
+        'chemical': chemical,
+        'biological': biological,
+        'organic': organic,
+      };
+      if (mounted) setState(() => _isLoadingTranslation = false);
+      return;
+    }
+
+    final loc = LanguageLocalizer();
+    final tChemical = await loc.localize(chemical, lang);
+    final tBiological = await loc.localize(biological, lang);
+    final tOrganic = await loc.localize(organic, lang);
+
+    if (mounted) {
+      setState(() {
+        _translatedDiagnosis = {
+          'chemical': tChemical,
+          'biological': tBiological,
+          'organic': tOrganic,
+        };
+        _isLoadingTranslation = false;
+      });
+    }
+  }
 
   Future<void> _speakReport(BuildContext context) async {
-    final langCode = appState.userLanguage == 'Hindi' ? 'hi' : (appState.userLanguage == 'Kannada' ? 'kn' : 'en');
+    final langCode = widget.appState.userLanguage == 'Hindi' ? 'hi' : (widget.appState.userLanguage == 'Kannada' ? 'kn' : 'en');
     
     final text = '''
-    ${scanResult['disease_name']} Detected. Severity is ${scanResult['severity']}.
+    ${widget.scanResult['disease_name']} Detected. Severity is ${widget.scanResult['severity']}.
     
-    Chemical Control: ${diagnosis['chemical_control'] ?? 'Not available'}.
+    Chemical Control: ${_translatedDiagnosis['chemical']}.
     
-    Biological Control: ${diagnosis['biological_control'] ?? 'Not available'}.
+    Biological Control: ${_translatedDiagnosis['biological']}.
     
-    Organic Alternative: ${diagnosis['organic_alternative'] ?? 'Not available'}.
+    Organic Alternative: ${_translatedDiagnosis['organic']}.
     ''';
     
     await _voiceService.speak(text, langCode, id: 'pest_report');
@@ -44,12 +93,12 @@ class PestResultScreen extends StatelessWidget {
 
   Future<void> _saveReport(BuildContext context) async {
     final reportData = {
-      'phone_number': appState.userData['phone'] ?? 'unknown',
-      'disease_name': scanResult['disease_name'],
-      'severity': scanResult['severity'],
-      'confidence': scanResult['confidence'],
-      'diagnosis': diagnosis,
-      'image_path': imagePath, // Note: Local path, ideally should be uploaded URL
+      'phone_number': widget.appState.userData['phone'] ?? 'unknown',
+      'disease_name': widget.scanResult['disease_name'],
+      'severity': widget.scanResult['severity'],
+      'confidence': widget.scanResult['confidence'],
+      'diagnosis': widget.diagnosis, // Save original English diagnosis
+      'image_path': widget.imagePath,
       'timestamp': DateTime.now().toIso8601String(),
     };
 
@@ -79,7 +128,7 @@ class PestResultScreen extends StatelessWidget {
                   title: AppLocalizations.of(context)!.pestDetection, 
                   showBack: true, 
                   showProfile: false, 
-                  appState: appState, 
+                  appState: widget.appState, 
                   onBack: () => Navigator.of(context).pop(),
                   trailing: StreamBuilder<String?>(
                     stream: _voiceService.playingIdStream,
@@ -115,7 +164,7 @@ class PestResultScreen extends StatelessWidget {
                             color: Colors.grey.shade200,
                             borderRadius: BorderRadius.circular(24),
                             image: DecorationImage(
-                              image: FileImage(File(imagePath)),
+                              image: FileImage(File(widget.imagePath)),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -139,11 +188,11 @@ class PestResultScreen extends StatelessWidget {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '${scanResult['disease_name']} Detected',
+                                          '${widget.scanResult['disease_name']} Detected',
                                           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
                                         ),
-                                        Text(
-                                          'Severity: ${scanResult['severity'].toString().toUpperCase()} (${(scanResult['confidence'] * 100).toStringAsFixed(0)}%)',
+                                          Text(
+                                          'Severity: ${widget.scanResult['severity']} (${(widget.scanResult['confidence'] * 100).toStringAsFixed(0)}%)',
                                           style: const TextStyle(color: Colors.red),
                                         ),
                                       ],
@@ -157,24 +206,31 @@ class PestResultScreen extends StatelessWidget {
                         const SizedBox(height: 24),
                         Text(AppLocalizations.of(context)!.recommendedActions, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
                         const SizedBox(height: 16),
-                        _ActionCard(
-                          title: AppLocalizations.of(context)!.chemicalControl,
-                          description: diagnosis['chemical_control'] ?? 'Not available',
-                          icon: LucideIcons.flaskConical,
-                          color: Colors.blue,
-                        ),
-                        _ActionCard(
-                          title: AppLocalizations.of(context)!.biologicalControl,
-                          description: diagnosis['biological_control'] ?? 'Not available',
-                          icon: LucideIcons.leaf,
-                          color: Colors.green,
-                        ),
-                        _ActionCard(
-                          title: AppLocalizations.of(context)!.organicAlternativeTitle,
-                          description: diagnosis['organic_alternative'] ?? 'Not available',
-                          icon: LucideIcons.sprout,
-                          color: Colors.orange,
-                        ),
+                        if (_isLoadingTranslation)
+                          const Center(child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: CircularProgressIndicator(),
+                          ))
+                        else ...[
+                          _ActionCard(
+                            title: AppLocalizations.of(context)!.chemicalControl,
+                            description: _translatedDiagnosis['chemical'] ?? '',
+                            icon: LucideIcons.flaskConical,
+                            color: Colors.blue,
+                          ),
+                          _ActionCard(
+                            title: AppLocalizations.of(context)!.biologicalControl,
+                            description: _translatedDiagnosis['biological'] ?? '',
+                            icon: LucideIcons.leaf,
+                            color: Colors.green,
+                          ),
+                          _ActionCard(
+                            title: AppLocalizations.of(context)!.organicAlternativeTitle,
+                            description: _translatedDiagnosis['organic'] ?? '',
+                            icon: LucideIcons.sprout,
+                            color: Colors.orange,
+                          ),
+                        ],
                         const SizedBox(height: 24),
                         Row(
                           children: [

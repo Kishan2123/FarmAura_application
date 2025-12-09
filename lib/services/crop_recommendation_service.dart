@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../services/location_service.dart';
+
 class CropRecommendationService {
   // Use 10.0.2.2 for Android Emulator to access host's localhost
   static const String baseUrl = 'http://10.0.2.2:5001/api'; 
@@ -15,13 +17,16 @@ class CropRecommendationService {
   }) async {
     final url = Uri.parse('$baseUrl/auto-fill-parameters');
     
+    // Normalize District
+    final normalizedDistrict = LocationService.normalizeDistrict(district);
+
     try {
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'state': state,
-          'district': district,
+          'district': normalizedDistrict,
           'frequent_grown_crop': frequentCrop.toLowerCase(),
           'land_size': landSize,
           'irrigation_type': irrigationType.toLowerCase(),
@@ -50,13 +55,16 @@ class CropRecommendationService {
   }) async {
     final url = Uri.parse('$baseUrl/get-recommendation');
 
+    // Normalize District
+    final normalizedDistrict = LocationService.normalizeDistrict(district);
+
     try {
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'state': state,
-          'district': district,
+          'district': normalizedDistrict,
           'frequent_grown_crop': frequentCrop.toLowerCase(),
           'land_size': landSize,
           'irrigation_type': irrigationType.toLowerCase(),
@@ -84,6 +92,9 @@ class CropRecommendationService {
   }) async {
     final url = Uri.parse('$baseUrl/get-explanation');
 
+    // Normalize District
+    final normalizedDistrict = LocationService.normalizeDistrict(district);
+
     try {
       final response = await http.post(
         url,
@@ -91,7 +102,7 @@ class CropRecommendationService {
         body: jsonEncode({
           'crop_name': cropName,
           'state': state,
-          'district': district,
+          'district': normalizedDistrict,
           'frequent_grown_crop': frequentCrop,
           'land_size': landSize,
         }),

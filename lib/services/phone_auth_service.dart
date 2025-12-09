@@ -36,15 +36,18 @@ class PhoneAuthService {
       await _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (auth.PhoneAuthCredential credential) async {
+          print('✅ Verification Completed Auto-Resolution'); // Added log
           // Auto-resolution (Android only)
           await _signInWithCredential(credential, context);
         },
         verificationFailed: (auth.FirebaseAuthException e) {
+          print('❌ Verification Failed: Code: ${e.code}, Message: ${e.message}'); // Added log
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Verification Failed: ${e.message}')),
           );
         },
         codeSent: (String verificationId, int? resendToken) {
+          print('📩 Code Sent. Verification ID: $verificationId'); // Added log
           _verificationId = verificationId;
           onCodeSentNavigateToOtp();
           ScaffoldMessenger.of(context).showSnackBar(
@@ -52,15 +55,19 @@ class PhoneAuthService {
           );
         },
         codeAutoRetrievalTimeout: (String verificationId) {
+          print('⏰ Code Auto Retrieval Timeout. Verification ID: $verificationId'); // Added log
           _verificationId = verificationId;
         },
       );
     } catch (e) {
+      print('❌ PhoneAuthService Exception: $e'); // Added log
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
     }
   }
+
+  /// Verifies the OTP entered by the user
 
   /// Verifies the OTP entered by the user
   Future<void> verifyOtp({
